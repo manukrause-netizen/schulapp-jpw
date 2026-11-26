@@ -584,7 +584,7 @@ body.noscroll{overflow:hidden}
 .zgcheck{padding:12px;border-radius:12px;background:var(--fill);font-weight:600}
 .zgcheck.ok{background:color-mix(in srgb,var(--tint) 16%,var(--card))}.zgcheck.bad{background:color-mix(in srgb,var(--red) 12%,var(--card));color:var(--red)}
 .zgcheck .small{font-weight:400;margin-top:4px}.zgcheck .muted{color:var(--label2)}
-.zgwahl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:8px;align-items:center;margin-bottom:8px}
+.zgwahl{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.4fr) auto;gap:8px;align-items:center;margin-bottom:8px}
 .zglock{opacity:.6}
 .zgprevwrap{position:sticky;top:12px;background:var(--fill);border-radius:16px;padding:14px;max-height:calc(100vh - 24px);overflow:auto}
 .zgpage{background:#fff;color:#111;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:28px 28px 18px;font-family:Arial,Helvetica,sans-serif;font-size:11.5px;line-height:1.45;max-width:600px;margin:0 auto}
@@ -592,10 +592,10 @@ body.noscroll{overflow:hidden}
 .zgline{display:flex;justify-content:space-between;font-size:10.5px;margin-top:12px}
 .zgtitle{text-align:center;font-weight:700;font-size:19px;letter-spacing:.05em;margin-top:14px}.zgsub{text-align:center;font-size:11px}
 .zgfor{text-align:center;font-size:10.5px}.zgname{text-align:center;font-size:15px;margin-top:2px}
-.zgsec{margin-top:10px;overflow-wrap:break-word}.zgph2{color:#999}
+.zgsec{margin-top:10px;overflow-wrap:break-word;text-align:justify;-webkit-hyphens:auto;hyphens:auto}.zgph2{color:#999}
 .zghd{font-weight:700;margin-top:14px;border-bottom:1px solid #999;padding-bottom:2px}
 .zgrow{display:flex;justify-content:space-between;align-items:center;padding:4px 0 2px;font-weight:700}.zgrow b{min-width:34px;min-height:16px;text-align:center;background:#eee;border-radius:2px}
-.zgft{font-size:10.5px;color:#222;padding:0 0 4px 8px;border-bottom:1px solid #eee}
+.zgft{font-size:10.5px;color:#222;padding:0 0 4px 8px;border-bottom:1px solid #eee;text-align:justify;-webkit-hyphens:auto;hyphens:auto}
 .zgdate{text-align:center;margin-top:22px}
 .zgsig{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:22px;font-size:10px;color:#444;text-align:center}
 .zgsig i{display:block;border-top:1px solid #777;margin-bottom:3px}
@@ -605,7 +605,7 @@ body.noscroll{overflow:hidden}
 .zglist li{gap:8px;flex-wrap:wrap}.zglname{font-weight:600;font-size:16px;text-decoration:none}.zglist .grow{flex:1}
 .zgln{width:86px;padding-top:7px;padding-bottom:7px;text-align:center}
 @media (max-width:1100px){.zgprevwrap{position:static;max-height:none}}
-@media (max-width:560px){.zgpage{padding:16px 14px;font-size:10.5px}.zgwahl{grid-template-columns:1fr auto}.zgwahl .zgw[data-k="t"]{grid-column:1 / -1;grid-row:2}.zgpick{min-width:0;max-width:100%}.zgsub{display:none}.zgbca{font-size:15px}}
+@media (max-width:560px){.zgpage{padding:16px 14px;font-size:10.5px}.zgwahl{grid-template-columns:1fr auto}.zgwahl .zgwh{grid-column:1 / -1;grid-row:2}.zgpick{min-width:0;max-width:100%}.zgsub{display:none}.zgbca{font-size:15px}}
 
 .hkhead{display:flex;gap:10px;align-items:flex-start}.hkhead .grow{flex:1;min-width:0}.hkhead .fd{margin-top:7px}
 .hkrows li{min-height:52px;gap:10px}.hkrows .grow{min-width:0}.hkrows .tag{margin-top:3px}
@@ -1365,7 +1365,7 @@ function renderHeute(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><span class="err" id="obsErr"></span><button class="primary" data-act="obs-save">Notiz sichern</button></div>
     </section>
 
-    <section class="card w12" data-card="ql"><div class="ch"><h2><svg><use href="#i-ext"/></svg>Schnellzugriff</h2><button class="link" data-act="settings">Adressen</button></div><div class="qlgrid">${QL_DEF.map(q=>`<a class="qlt" href="${esc(qlUrl(q.id))}" target="_blank" rel="noopener"><span class="qli" style="background:${q.c}"><svg><use href="#${q.i}"/></svg></span><span class="qlx"><b>${q.n}</b><small>${q.s}</small></span></a>`).join('')}</div><p class="small muted" style="margin:10px 0 0">Öffnet den Dienst im Browser bzw. in der App. Anmeldung mit der ByCS-Kennung.</p></section>
+    <section class="card w12" data-card="ql"><div class="ch"><h2><svg><use href="#i-ext"/></svg>Schnellzugriff</h2><button class="link" data-act="settings">Adressen</button></div><div class="qlgrid">${QL_DEF.filter(q=>!q.off).map(q=>`<a class="qlt" href="${esc(qlUrl(q.id))}" target="_blank" rel="noopener"><span class="qli" style="background:${q.c}"><svg><use href="#${q.i}"/></svg></span><span class="qlx"><b>${q.n}</b><small>${q.s}</small></span></a>`).join('')}</div><p class="small muted" style="margin:10px 0 0">Öffnet den Dienst im Browser bzw. in der App. Jede Lehrkraft meldet sich mit der eigenen ByCS-Kennung an, bei der Dienst-E-Mail mit der eigenen Dienstadresse – so landet jeder in seinem eigenen Postfach.</p></section>
 
     <section class="card w6" data-card="listen"><div class="ch"><h2><svg><use href="#i-list"/></svg>Listen</h2><button class="link" data-view="listen">Alle</button></div><ul class="rows">${listsHTML}</ul></section>
 
@@ -2819,15 +2819,15 @@ const ZG_KB={D:[['spr','Sprechen und Zuhören'],['les','Lesen – mit Texten und
  E:[['ws','Wortschatz und dessen Anwendung in Sprache und Schrift'],['ai','Aussprache und Intonation'],['gr','Grammatik'],['hv','Hörverstehen'],['schr','Schreiben']]};
 ZG_KB.DaZ=ZG_KB.D;
 const ZG_LIB={
- 'soz.verantw':['{V} übernimmt von sich aus Verantwortung für die Klassengemeinschaft und setzt sich für andere ein.','{V} übernimmt übertragene Aufgaben für die Gemeinschaft und erledigt sie zuverlässig.','{V} übernimmt Aufgaben für die Gemeinschaft, wenn {V} darum gebeten wird.','{V} wächst zunehmend in die Übernahme von Verantwortung für die Gemeinschaft hinein.'],
+ 'soz.verantw':['{V} übernimmt von sich aus Verantwortung für die Klassengemeinschaft und setzt sich für andere ein.','{V} übernimmt übertragene Aufgaben für die Gemeinschaft und erledigt sie zuverlässig.','{V} übernimmt Aufgaben für die Gemeinschaft, wenn {er} darum gebeten wird.','{V} wächst zunehmend in die Übernahme von Verantwortung für die Gemeinschaft hinein.'],
  'soz.koop':['{V} arbeitet mit anderen sehr zielgerichtet zusammen und bringt eigene Ideen konstruktiv ein.','{V} arbeitet gern und zuverlässig mit anderen zusammen.','{V} arbeitet mit anderen zusammen, wenn die Aufgaben klar verteilt sind.','{V} übt, sich in Gruppenarbeiten noch stärker einzubringen.'],
  'soz.komm':['{V} hört anderen aufmerksam zu, äußert die eigene Meinung sachlich und geht auf Beiträge anderer ein.','{V} hält Gesprächsregeln ein und äußert die eigene Meinung angemessen.','{V} hält Gesprächsregeln meist ein und lässt andere ausreden.','{V} übt, andere ausreden zu lassen und auf ihre Beiträge einzugehen.'],
  'soz.konf':['{V} löst Konflikte selbstständig, fair und sachlich und vermittelt auch zwischen anderen.','{V} trägt Meinungsverschiedenheiten in der Regel sachlich aus.','{V} löst Konflikte mit Unterstützung von Erwachsenen.','{V} arbeitet daran, in Konflikten ruhig und sachlich zu bleiben.'],
- 'lern.inter':['{V} zeigt großes Interesse und beteiligt sich mit wertvollen Beiträgen am Unterricht.','{V} arbeitet interessiert und regelmäßig im Unterricht mit.','{V} beteiligt sich am Unterricht, vor allem bei Themen, die {V} ansprechen.','{V} kann sich noch häufiger von sich aus am Unterricht beteiligen.'],
+ 'lern.inter':['{V} zeigt großes Interesse und beteiligt sich mit wertvollen Beiträgen am Unterricht.','{V} arbeitet interessiert und regelmäßig im Unterricht mit.','{V} beteiligt sich am Unterricht, vor allem bei Themen, die {ihn} ansprechen.','{V} kann sich noch häufiger von sich aus am Unterricht beteiligen.'],
  'lern.konz':['{V} arbeitet auch über längere Zeit konzentriert und ausdauernd.','{V} arbeitet meist konzentriert und bleibt bei der Sache.','{V} arbeitet konzentriert, braucht bei längeren Aufgaben aber Pausen oder Hinweise.','{V} übt, sich über längere Zeit auf eine Aufgabe zu konzentrieren.'],
  'lern.org':['{V} plant Arbeitsschritte selbstständig, führt Hefte vorbildlich und hat Arbeitsmaterial stets vollständig dabei.','{V} organisiert die eigene Arbeit überwiegend selbstständig und hat Material meist dabei.','{V} organisiert die eigene Arbeit mit Hilfen wie Checklisten oder Hinweisen der Lehrkraft.','{V} arbeitet daran, Material und Arbeitsschritte besser zu ordnen.'],
  'lern.refl':['{V} schätzt die eigenen Stärken und Schwächen realistisch ein und leitet daraus eigene Lernziele ab.','{V} kann die eigene Leistung meist zutreffend einschätzen.','{V} schätzt die eigene Leistung mit Unterstützung ein.','{V} lernt, die eigene Arbeit kritisch zu betrachten.'],
- 'D.spr':['{V} trägt Inhalte frei, gut gegliedert und adressatengerecht vor und hört anderen aufmerksam zu.','{V} spricht verständlich vor der Klasse und folgt Gesprächen aufmerksam.','{V} trägt kurze Beiträge vor; beim freien Sprechen helfen {V} Stichpunkte.','{V} übt, Beiträge verständlich und zusammenhängend vorzutragen.'],
+ 'D.spr':['{V} trägt Inhalte frei, gut gegliedert und adressatengerecht vor und hört anderen aufmerksam zu.','{V} spricht verständlich vor der Klasse und folgt Gesprächen aufmerksam.','{V} trägt kurze Beiträge vor; beim freien Sprechen helfen {ihm} Stichpunkte.','{V} übt, Beiträge verständlich und zusammenhängend vorzutragen.'],
  'D.les':['{V} erschließt auch anspruchsvolle Sach- und literarische Texte sicher und nutzt Lesestrategien gezielt.','{V} versteht Sach- und literarische Texte und gibt den Inhalt zutreffend wieder.','{V} entnimmt Texten wichtige Informationen mit Hilfen wie Leitfragen.','{V} übt, Texte genau zu lesen und Informationen zu entnehmen.'],
  'D.schr':['{V} verfasst Texte der geforderten Textsorten sicher, gut gegliedert und sprachlich treffend.','{V} schreibt geordnete Texte und beachtet die Merkmale der Textsorten.','{V} schreibt Texte mit Hilfen wie Schreibplänen oder Mustern.','{V} übt, Texte nach einem Plan zu schreiben und zu überarbeiten.'],
  'D.sg':['{V} wendet Rechtschreib- und Grammatikregeln sicher an und überarbeitet Texte eigenständig.','{V} beachtet die wichtigsten Rechtschreib- und Grammatikregeln.','{V} wendet Rechtschreibregeln mit Hilfsmitteln wie dem Wörterbuch an.','{V} übt, Rechtschreibregeln konsequent anzuwenden.'],
@@ -2844,11 +2844,39 @@ const ZG_LIB={
  'E.schr':['{V} verfasst zusammenhängende Texte sprachlich korrekt und abwechslungsreich.','{V} schreibt verständliche Texte zu vertrauten Themen.','{V} schreibt kurze Texte mit Hilfen wie Mustern oder Satzanfängen.','{V} übt, einfache Texte nach Vorlage zu schreiben.'],
  'bem':['{V} zeigt im Fach {F} sehr gute Kenntnisse und arbeitet engagiert mit.','{V} arbeitet im Fach {F} interessiert mit und erzielt gute Ergebnisse.','{V} beteiligt sich im Fach {F} und erledigt die gestellten Aufgaben.','{V} kann sich im Fach {F} durch regelmäßige Mitarbeit noch steigern.']};
 ZG_LIB['DaZ.spr']=ZG_LIB['D.spr'];ZG_LIB['DaZ.les']=ZG_LIB['D.les'];ZG_LIB['DaZ.schr']=ZG_LIB['D.schr'];ZG_LIB['DaZ.sg']=ZG_LIB['D.sg'];
-const ZG_ENG=['{V} hat das Amt der Klassensprecherin bzw. des Klassensprechers verantwortungsvoll ausgeübt.','{V} hat in der Schülermitverantwortung (SMV) mitgearbeitet.','{V} hat als Streitschlichterin bzw. Streitschlichter bei Konflikten vermittelt.','{V} war im Schulsanitätsdienst tätig.','{V} hat als Medienscout andere beim sicheren Umgang mit digitalen Medien unterstützt.','{V} hat jüngere Schülerinnen und Schüler als Tutorin bzw. Tutor begleitet.','{V} hat mit großem Einsatz an der Schulband mitgewirkt.','{V} hat sich beim Schulfest engagiert.'];
+const ZG_LIB_PAST={
+ 'soz.verantw':['{V} übernahm von sich aus Verantwortung für die Klassengemeinschaft und setzte sich für andere ein.','{V} übernahm übertragene Aufgaben für die Gemeinschaft und erledigte sie zuverlässig.','{V} übernahm Aufgaben für die Gemeinschaft, wenn {er} darum gebeten wurde.','{V} wuchs zunehmend in die Übernahme von Verantwortung für die Gemeinschaft hinein.'],
+ 'soz.koop':['{V} arbeitete mit anderen sehr zielgerichtet zusammen und brachte eigene Ideen konstruktiv ein.','{V} arbeitete gern und zuverlässig mit anderen zusammen.','{V} arbeitete mit anderen zusammen, wenn die Aufgaben klar verteilt waren.','{V} übte, sich in Gruppenarbeiten noch stärker einzubringen.'],
+ 'soz.komm':['{V} hörte anderen aufmerksam zu, äußerte die eigene Meinung sachlich und ging auf Beiträge anderer ein.','{V} hielt Gesprächsregeln ein und äußerte die eigene Meinung angemessen.','{V} hielt Gesprächsregeln meist ein und ließ andere ausreden.','{V} übte, andere ausreden zu lassen und auf ihre Beiträge einzugehen.'],
+ 'soz.konf':['{V} löste Konflikte selbstständig, fair und sachlich und vermittelte auch zwischen anderen.','{V} trug Meinungsverschiedenheiten in der Regel sachlich aus.','{V} löste Konflikte mit Unterstützung von Erwachsenen.','{V} arbeitete daran, in Konflikten ruhig und sachlich zu bleiben.'],
+ 'lern.inter':['{V} zeigte großes Interesse und beteiligte sich mit wertvollen Beiträgen am Unterricht.','{V} arbeitete interessiert und regelmäßig im Unterricht mit.','{V} beteiligte sich am Unterricht, vor allem bei Themen, die {ihn} ansprachen.','{V} hätte sich noch häufiger von sich aus am Unterricht beteiligen können.'],
+ 'lern.konz':['{V} arbeitete auch über längere Zeit konzentriert und ausdauernd.','{V} arbeitete meist konzentriert und blieb bei der Sache.','{V} arbeitete konzentriert, brauchte bei längeren Aufgaben aber Pausen oder Hinweise.','{V} übte, sich über längere Zeit auf eine Aufgabe zu konzentrieren.'],
+ 'lern.org':['{V} plante Arbeitsschritte selbstständig, führte Hefte vorbildlich und hatte Arbeitsmaterial stets vollständig dabei.','{V} organisierte die eigene Arbeit überwiegend selbstständig und hatte Material meist dabei.','{V} organisierte die eigene Arbeit mit Hilfen wie Checklisten oder Hinweisen der Lehrkraft.','{V} arbeitete daran, Material und Arbeitsschritte besser zu ordnen.'],
+ 'lern.refl':['{V} schätzte die eigenen Stärken und Schwächen realistisch ein und leitete daraus eigene Lernziele ab.','{V} konnte die eigene Leistung meist zutreffend einschätzen.','{V} schätzte die eigene Leistung mit Unterstützung ein.','{V} lernte, die eigene Arbeit kritisch zu betrachten.'],
+ 'D.spr':['{V} trug Inhalte frei, gut gegliedert und adressatengerecht vor und hörte anderen aufmerksam zu.','{V} sprach verständlich vor der Klasse und folgte Gesprächen aufmerksam.','{V} trug kurze Beiträge vor; beim freien Sprechen halfen {ihm} Stichpunkte.','{V} übte, Beiträge verständlich und zusammenhängend vorzutragen.'],
+ 'D.les':['{V} erschloss auch anspruchsvolle Sach- und literarische Texte sicher und nutzte Lesestrategien gezielt.','{V} verstand Sach- und literarische Texte und gab den Inhalt zutreffend wieder.','{V} entnahm Texten wichtige Informationen mit Hilfen wie Leitfragen.','{V} übte, Texte genau zu lesen und Informationen zu entnehmen.'],
+ 'D.schr':['{V} verfasste Texte der geforderten Textsorten sicher, gut gegliedert und sprachlich treffend.','{V} schrieb geordnete Texte und beachtete die Merkmale der Textsorten.','{V} schrieb Texte mit Hilfen wie Schreibplänen oder Mustern.','{V} übte, Texte nach einem Plan zu schreiben und zu überarbeiten.'],
+ 'D.sg':['{V} wandte Rechtschreib- und Grammatikregeln sicher an und überarbeitete Texte eigenständig.','{V} beachtete die wichtigsten Rechtschreib- und Grammatikregeln.','{V} wandte Rechtschreibregeln mit Hilfsmitteln wie dem Wörterbuch an.','{V} übte, Rechtschreibregeln konsequent anzuwenden.'],
+ 'M.zo':['{V} rechnete sicher und flexibel und überprüfte Ergebnisse durch Überschlag.','{V} beherrschte die Grundrechenarten und rechnete überwiegend sicher.','{V} rechnete mit Hilfen wie Merkeinträgen oder Rechenwegen.','{V} übte, Rechenverfahren sicher anzuwenden.'],
+ 'M.sa':['{V} löste auch komplexe Sachaufgaben selbstständig und stellte den Lösungsweg nachvollziehbar dar.','{V} löste Sachaufgaben mit bekannten Lösungswegen.','{V} löste Sachaufgaben mit Hilfen wie Skizzen oder Tabellen.','{V} übte, wichtige Informationen aus Sachaufgaben herauszuarbeiten.'],
+ 'M.gm':['{V} rechnete sicher mit Größen und wandelte Einheiten fehlerfrei um.','{V} rechnete mit Größen und wandelte die gängigen Einheiten um.','{V} wandelte Einheiten mit Hilfe einer Umrechnungstabelle um.','{V} übte den Umgang mit Größen und Einheiten.'],
+ 'M.rf':['{V} konstruierte sehr genau und berechnete Flächen und Körper sicher.','{V} zeichnete geometrische Figuren genau und berechnete Flächen und Körper.','{V} berechnete Flächen und Körper mit Formelsammlung und Skizze.','{V} übte das genaue Zeichnen und den Umgang mit Formeln.'],
+ 'M.fz':['{V} erkannte Zusammenhänge sicher und stellte sie in Tabellen, Graphen und Termen dar.','{V} stellte Zuordnungen in Tabellen und Graphen dar.','{V} erkannte einfache Zuordnungen mit Unterstützung.','{V} übte, Zuordnungen zu erkennen und darzustellen.'],
+ 'M.dz':['{V} wertete Daten sicher aus und stellte sie passend in Diagrammen dar.','{V} las Diagramme und wertete Daten aus.','{V} las einfache Diagramme mit Hilfe ab.','{V} übte, Daten aus Tabellen und Diagrammen abzulesen.'],
+ 'E.ws':['{V} verfügte über einen umfangreichen Wortschatz und setzte ihn mündlich und schriftlich treffend ein.','{V} beherrschte den erarbeiteten Wortschatz und wandte ihn meist richtig an.','{V} kannte einen Grundwortschatz und wandte ihn mit Hilfen an.','{V} hätte durch regelmäßiges Wiederholen den Wortschatz weiter festigen können.'],
+ 'E.ai':['{V} sprach flüssig mit sehr guter Aussprache und Intonation.','{V} sprach verständlich mit guter Aussprache.','{V} sprach verständlich; bei neuen Wörtern war die Aussprache noch unsicher.','{V} übte eine deutliche Aussprache.'],
+ 'E.gr':['{V} wandte grammatische Strukturen sicher an.','{V} wandte die erarbeiteten grammatischen Strukturen meist richtig an.','{V} wandte grammatische Strukturen mit Hilfen wie Merkeinträgen an.','{V} übte die Anwendung grundlegender grammatischer Strukturen.'],
+ 'E.hv':['{V} verstand auch längere Hörtexte im Detail.','{V} verstand die wesentlichen Inhalte von Hörtexten.','{V} verstand einzelne Informationen aus Hörtexten.','{V} übte, Hörtexten gezielt Informationen zu entnehmen.'],
+ 'E.schr':['{V} verfasste zusammenhängende Texte sprachlich korrekt und abwechslungsreich.','{V} schrieb verständliche Texte zu vertrauten Themen.','{V} schrieb kurze Texte mit Hilfen wie Mustern oder Satzanfängen.','{V} übte, einfache Texte nach Vorlage zu schreiben.'],
+ 'bem':['{V} zeigte im Fach {F} sehr gute Kenntnisse und arbeitete engagiert mit.','{V} arbeitete im Fach {F} interessiert mit und erzielte gute Ergebnisse.','{V} beteiligte sich im Fach {F} und erledigte die gestellten Aufgaben.','{V} hätte sich im Fach {F} durch regelmäßige Mitarbeit noch steigern können.']};
+['spr','les','schr','sg'].forEach(k=>ZG_LIB_PAST['DaZ.'+k]=ZG_LIB_PAST['D.'+k]);
+const ZG_ENG_PRES=['{V} übt das Amt {des Klassensprechers|der Klassensprecherin} verantwortungsvoll aus.','{V} arbeitet in der Schülermitverantwortung (SMV) mit.','{V} vermittelt als {Streitschlichter|Streitschlichterin} bei Konflikten.','{V} ist im Schulsanitätsdienst tätig.','{V} unterstützt als Medienscout andere beim sicheren Umgang mit digitalen Medien.','{V} begleitet als {Tutor|Tutorin} jüngere Schülerinnen und Schüler.','{V} wirkt mit großem Einsatz in der Schulband mit.','{V} engagiert sich bei Schulveranstaltungen.'];
+const ZG_ENG_PAST=['{V} übte das Amt {des Klassensprechers|der Klassensprecherin} verantwortungsvoll aus.','{V} arbeitete in der Schülermitverantwortung (SMV) mit.','{V} vermittelte als {Streitschlichter|Streitschlichterin} bei Konflikten.','{V} war im Schulsanitätsdienst tätig.','{V} unterstützte als Medienscout andere beim sicheren Umgang mit digitalen Medien.','{V} begleitete als {Tutor|Tutorin} jüngere Schülerinnen und Schüler.','{V} wirkte mit großem Einsatz in der Schulband mit.','{V} engagierte sich bei Schulveranstaltungen.'];
+const ZG_ENG=ZG_ENG_PRES;
 const ZG_ART={zwi:'Zwischenzeugnis',jah:'Jahreszeugnis',abs:'Abschlusszeugnis',qa:'Qualifizierender Abschluss'};
 const ZG_TITLE={zwi:'ZWISCHENZEUGNIS',jah:'JAHRESZEUGNIS',abs:'ZEUGNIS',qa:'ZEUGNIS'};
 const ZG_REL=['kR','eR','orR','isR','Eth','IU'];
-const ZG_NOTEN=['','1','2','3','4','5','6','i. L.'];
+const ZG_NOTEN=['','1','2','3','4','5','6','i.L.'];
 const ZG_NAMEN={1:'sehr gut',2:'gut',3:'befriedigend',4:'ausreichend',5:'mangelhaft',6:'ungenügend'};
 let zgK=null,zgArt=null,zgIdx=0,zgView=null,zgFach='D';
 const zgJg=k=>Number(String(k).match(/\d+/)||[9])[0]||9;
@@ -2859,31 +2887,63 @@ function zgArtDef(){const jg=zgJg(zgClass());if(zgArt&&(['zwi','jah'].includes(z
 const zgKids=()=>prKids(zgClass());
 const zgDate=art=>art==='zwi'?zgCfg().zwiD:zgCfg().jahD;
 function zgRec(pid){S.zeug=S.zeug||{};const key=zgCfg().sj+'|'+zgArtDef()+'|'+pid;const r=S.zeug[key]=S.zeug[key]||{soz:{},lern:{},fb:{},n:{},rel:'kR',mk:'Ku',bo:'T',daz:false,wahl:[],eng:[],bem:'',vorr:null,ent:'',done:false};
-  r.fb=r.fb||{};r.eng=r.eng||[];if(r.ent==null)r.ent='';['soz','lern'].forEach(sec=>Object.keys(r[sec]).forEach(c=>{if(!Array.isArray(r[sec][c]))r[sec][c]=[r[sec][c]]}));return r}
+  r.fb=r.fb||{};r.eng=r.eng||[];Object.keys(r.n).forEach(f=>{if(r.n[f]==='i. L.')r.n[f]='i.L.'});r.ns=r.ns||{typ:'',f:'',v:''};r.mn=r.mn||{};if(r.nv==null)r.nv='';r.wahl.forEach(w=>{if(!w.hj)w.hj=zgArtDef()==='zwi'?'1':'12'});if(r.ent==null)r.ent='';['soz','lern'].forEach(sec=>Object.keys(r[sec]).forEach(c=>{if(!Array.isArray(r[sec][c]))r[sec][c]=[r[sec][c]]}));return r}
 function zgName(f){return f==='PP'?'Projektprüfung':fach(f).n}
 function zgSubjects(jg,art,r){const pf=[];const relP=['kR','eR','orR','isR'].includes(r.rel);
   if(relP)pf.push(r.rel);pf.push(r.daz?'DaZ':'D','M','E','Inf','WiB');if(jg===9&&art!=='zwi')pf.push('PP');pf.push('NT','GPG','Sp');if(jg<=6)pf.push('Mu','Ku','WG');
   const wpf=[];if(!relP)wpf.push(r.rel);if(jg>=7)wpf.push(r.mk);if(jg>=8)wpf.push(r.bo);return{pf,wpf}}
 function zgSug(pid,f){if(f==='PP'){const q=S.quali&&S.quali[pid]&&S.quali[pid].n&&S.quali[pid].n.PP;return q?Number(q):null}const keep=ntHJ;ntHJ=zgArtDef()==='zwi'?'1':'all';let r;try{r=ntCalc(pid,zgClass(),f)}finally{ntHJ=keep}return r&&r.total!=null?roundGrade(r.total):null}
 function zgAvg(pid,f){if(f==='PP')return null;const keep=ntHJ;ntHJ=zgArtDef()==='zwi'?'1':'all';let r;try{r=ntCalc(pid,zgClass(),f)}finally{ntHJ=keep}return r&&r.total!=null?r.total:null}
-function zgFill(t,p,f){return String(t||'').replace(/\{V\}/g,p.vn).replace(/\{F\}/g,f?zgName(f):'')}
+const ZG_W=/^(luca|luka|noah|jona|mika|elia|nikita|joshua|ilja|sascha|andrea|kai|levi|eli|toni|benni|jonny|henri|louie)$/i;
+function zgG(p){if(p.gs==='m'||p.gs==='w')return p.gs;const n=String(p.vn||'').trim().split(/[\s-]/)[0];return /[aeiy]$/i.test(n)&&!ZG_W.test(n)?'w':'m'}
+function zgFill(t,p,f,rot){const w=zgG(p)==='w';let x=String(t||'').replace(/\{F\}/g,f?zgName(f):'').replace(/\{([^{}|]+)\|([^{}|]+)\}/g,(_,a,b)=>w?b:a)
+    .replace(/\{er\}/g,w?'sie':'er').replace(/\{ihn\}/g,w?'sie':'ihn').replace(/\{ihm\}/g,w?'ihr':'ihm').replace(/\{sein\}/g,w?'ihr':'sein');
+  return x.replace(/\{V\}/g,(m,o,str)=>{if(!rot)return p.vn;const pre=str.slice(0,o).trimEnd();return (!pre||/[.!?:]$/.test(pre))?rot():p.vn})}
+function zgToV(t,p){const n=String(p.vn||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return n?String(t).replace(new RegExp('(^|[^\\wÄÖÜäöüß])'+n+'(?![\\wÄÖÜäöüß])','g'),'$1{V}'):t}
+function zgRawE(e,path){if(!e)return '';if(e.own!=null)return String(e.own).trim();if(e.lv!=null)return zgLib(path)[e.lv]||'';return ''}
+function zgJoinRaw(r,path){return zgList(r,path).map(e=>zgRawE(e,path)).filter(Boolean).join(' ')}
+const ZG_NS={rs:{n:'Isolierte Rechtschreibstörung',f:'in allen Fächern'},ls:{n:'Isolierte Lesestörung',f:'in den Fächern Deutsch und Englisch'},lrs:{n:'Lese-Rechtschreib-Störung',f:'in allen Fächern',v:'Deutsch und Englisch'}};
+const ZG_HJ={'1':'ersten Halbjahr','2':'zweiten Halbjahr','12':'ersten und zweiten Halbjahr'};
+function zgFixed(r,p,jg,art){const o={top:[],deutsch:[],nach:[],bem:[],ag:[]};const dz=[];const P=art!=='zwi',T=(a,b)=>P?b:a;
+  if(r.daz)dz.push('{Der Schüler|Die Schülerin} wird innerhalb des regulären Deutschunterrichts nach den Grundsätzen des Lehrplans „Deutsch als Zweitsprache“ bedarfsgerecht unterrichtet und benotet.'.replace(' wird innerhalb',T(' wird innerhalb',' wurde innerhalb')));
+  const nv=String(r.nv||'').trim();if(r.daz&&nv)dz.push(`Entsprechend § 13 (2) der MSO ${T('wird','wurde')} ${/,| und /.test(nv)?'in den Fächern':'im Fach'} ${nv} auf eine Bewertung der Leistungen durch Noten vorübergehend verzichtet.`);
+  if(art==='zwi')o.top.push(...dz);else o.deutsch.push(...dz);
+  const ns=r.ns||{},d=ZG_NS[ns.typ];if(d){const f=(ns.f||d.f).trim();
+    const W=T('wird','wurde');o.nach.push(ns.typ==='rs'?`Die Rechtschreibleistung ${W} ${f} nicht bewertet.`:ns.typ==='ls'?`Die Leseleistung ${W} ${f} nicht bewertet.`:`Auf die Bewertung des Vorlesens in den Fächern ${(ns.v||d.v).trim()} ${W} verzichtet. Die Rechtschreibleistung ${W} ${f} nicht in die Bewertung einbezogen.`)}
+  const mn=r.mn||{},MW=T('wird','wurde');if(mn.e&&mn.m)o.bem.push(`{V} ${MW} im Fach Englisch auf M-Niveau gefördert und im Fach Mathematik auf M-Niveau gefördert und benotet.`);else if(mn.e)o.bem.push(`{V} ${MW} im Fach Englisch auf M-Niveau gefördert.`);else if(mn.m)o.bem.push(`{V} ${MW} im Fach Mathematik auf M-Niveau gefördert und benotet.`);
+  const {pf,wpf}=zgSubjects(jg,art,r);const il=[...pf,...wpf].filter(f=>r.n[f]==='i.L.').map(zgName);
+  if(il.length)o.bem.push(`{Der Schüler|Die Schülerin} ${T('wird','wurde')} ${il.length>1?'in den Fächern '+il.slice(0,-1).join(', ')+' und '+il.slice(-1):'im Fach '+il[0]} auf der Basis eines individuellen Förderplans unterrichtet. Diesem sind auch die konkreten Lernziele bzw. die angestrebten Kompetenzstufen zu entnehmen. Die Ziffernnote ${T('wird','wurde')} durch eine Beschreibung der individuellen Lernentwicklung ersetzt.`);
+  (r.wahl||[]).filter(w=>w.n&&w.n.trim()).forEach(w=>o.ag.push(`{V} ${T('nimmt','nahm')} im ${ZG_HJ[w.hj]||ZG_HJ['1']} an der Arbeitsgemeinschaft ${w.n.trim()} teil.`));
+  return o}
+function zgOut(r,p,jg,art){const w=zgG(p)==='w';let n=0;const rot=()=>{const k=n++%3;return k===0?p.vn:k===1?(w?'Sie':'Er'):(w?'Die Schülerin':'Der Schüler')};
+  const {pf,wpf}=zgSubjects(jg,art,r);const sec=k=>zgFill(ZG_SEC[k].cats.map(([id])=>zgJoinRaw(r,k+'.'+id)).filter(Boolean).join(' '),p,null,rot);
+  const X=zgFixed(r,p,jg,art),FF=x=>zgFill(x,p,null,rot);
+  const o={soz:sec('soz'),lern:sec('lern'),fach:{}};o.top=X.top.map(FF);
+  [...pf,...wpf].forEach(f=>{const kb=ZG_KB[f];o.fach[f]=zgFill((kb?kb.map(([id])=>zgJoinRaw(r,'fb.'+f+'.'+id)):[]).concat([zgJoinRaw(r,'fb.'+f+'.bem')]).concat(f==='D'||f==='DaZ'?X.deutsch:[]).filter(Boolean).join(' '),p,f,rot)});
+  o.nach=X.nach.map(FF);o.nachH=jg<=7?'Individuelle Lernentwicklung':'';
+  o.eng=FF(zgJoinRaw(r,'eng'));o.ag=X.ag.map(FF);
+  o.bem=[...X.bem,r.bem,zgVermerk(r,jg,art),r.ent].filter(x=>x&&String(x).trim()).map(FF);return o}
 function zgPath(r,path){const a=path.split('.');if(a[0]==='fb'){r.fb[a[1]]=r.fb[a[1]]||{};return [r.fb[a[1]],a[2]]}if(a[0]==='eng')return [r,'eng'];return [r[a[0]],a[1]]}
 function zgList(r,path){const [o,k]=zgPath(r,path);o[k]=Array.isArray(o[k])?o[k]:(o[k]?[o[k]]:[]);return o[k]}
-function zgLib(path){const a=path.split('.');if(a[0]==='eng')return ZG_ENG;if(a[0]==='fb')return ZG_LIB[a[1]+'.'+a[2]]||ZG_LIB.bem;return ZG_LIB[path]||[]}
+const zgPast=()=>zgArtDef()!=='zwi';
+function zgLib(path){const a=path.split('.'),L=zgPast()?ZG_LIB_PAST:ZG_LIB;if(a[0]==='eng')return zgPast()?ZG_ENG_PAST:ZG_ENG_PRES;if(a[0]==='fb')return L[a[1]+'.'+a[2]]||L.bem;return L[path]||[]}
+const zgF=path=>{const a=path.split('.');return a[0]==='fb'?a[1]:null};
+const zgEnd=t=>t?String(t).trim()+' -/-':'';
 function zgEntryText(e,path,p){const a=path.split('.'),f=a[0]==='fb'?a[1]:null;if(!e)return '';if(e.own!=null)return zgFill(e.own,p,f).trim();if(e.lv!=null)return zgFill(zgLib(path)[e.lv],p,f);return ''}
 function zgJoin(r,path,p){return zgList(r,path).map(e=>zgEntryText(e,path,p)).filter(Boolean).join(' ')}
 function zgSecText(r,p,sec){return ZG_SEC[sec].cats.map(([id])=>zgJoin(r,sec+'.'+id,p)).filter(Boolean).join(' ')}
 function zgFachText(r,p,f){const kb=ZG_KB[f];return (kb?kb.map(([id])=>zgJoin(r,'fb.'+f+'.'+id,p)):[]).concat([zgJoin(r,'fb.'+f+'.bem',p)]).filter(Boolean).join(' ')}
-function zgNums(r,jg,art){const {pf,wpf}=zgSubjects(jg,art,r);const all=[...pf,...wpf].filter(f=>f!=='Sp');const g=all.map(f=>({f,v:Number(r.n[f])})).filter(x=>x.v>=1&&x.v<=6);return{all,g}}
+function zgNums(r,jg,art){const {pf,wpf}=zgSubjects(jg,art,r);const all=[...pf,...wpf].filter(f=>f!=='Sp'&&r.n[f]!=='i.L.');const g=all.map(f=>({f,v:Number(r.n[f])})).filter(x=>x.v>=1&&x.v<=6);return{all,g}}
 function zgCheck(r,jg,art){const {all,g}=zgNums(r,jg,art);if(g.length<all.length)return{ok:null,msg:'Noch nicht alle Noten eingetragen.'};
   const ev=a=>({avg:a.reduce((s,x)=>s+x.v,0)/a.length,bad:a.filter(x=>x.v>4).length});
   if(jg===9&&art!=='zwi'){const a=ev(g.filter(x=>x.f!=='PP')),b=ev(g);const okA=a.avg<=4&&a.bad<=3,okB=b.avg<=4&&b.bad<=3,ok=okA||okB,u=okA?a:b;
     return{ok,avg:u.avg,bad:u.bad,msg:(ok?'Erfolgreicher Abschluss erreicht':'Erfolgreicher Abschluss nicht erreicht')+' (Ø '+fmtN(u.avg)+', '+u.bad+'× schlechter als 4).'}}
   const x=ev(g),ok=!(x.avg>4||x.bad>3);
   return{ok,avg:x.avg,bad:x.bad,msg:(ok?(jg===9?'Abschluss nach jetzigem Stand nicht gefährdet':'Vorrücken unbedenklich'):(art==='zwi'?(jg===9?'Erfolgreicher Abschluss gefährdet':'Vorrücken gefährdet'):'Vorrücken in der Regel zu versagen'))+' (Ø '+fmtN(x.avg)+', '+x.bad+'× schlechter als 4).'}}
-function zgVermerk(r,jg,art){if(r.vorr!=null&&r.vorr!=='')return r.vorr;const c=zgCheck(r,jg,art);
+function zgGefT(jg){return jg<9?['Bei weiterem Absinken der Leistungen ist das Vorrücken in die nächsthöhere Jahrgangsstufe gefährdet.','Das Vorrücken in die nächsthöhere Jahrgangsstufe ist gefährdet.','Das Vorrücken in die nächsthöhere Jahrgangsstufe ist sehr gefährdet.']:['Bei weiterem Absinken der Leistungen ist der erfolgreiche Abschluss der Mittelschule gefährdet.','Der erfolgreiche Abschluss der Mittelschule ist gefährdet.','Der erfolgreiche Abschluss der Mittelschule ist sehr gefährdet.']}
+function zgVermerk(r,jg,art){if(r.vorr!=null)return r.vorr;const c=zgCheck(r,jg,art);
   if(art==='jah'&&jg===9)return c.ok?'Dieses Zeugnis schließt die Berechtigungen des erfolgreichen Abschlusses der Mittelschule ein.':'';
-  if(art==='zwi')return c.ok===false?(jg<9?'Das Vorrücken ist gefährdet.':'Der erfolgreiche Abschluss ist gefährdet.'):'';
+  if(art==='zwi'){const T=zgGefT(jg);if(c.ok===false)return (c.avg>4.5||c.bad>=5)?T[2]:T[1];if(c.ok&&(c.avg>3.7||c.bad>=3))return T[0];return ''}
   if(art==='jah')return c.ok===false?'':`Die Erlaubnis zum Vorrücken in die Jahrgangsstufe ${jg+1} hat {V} erhalten.`;
   return ''}
 function zgQa(p){try{return qCalc(p)}catch(_){return null}}
@@ -2892,7 +2952,7 @@ function zgState(r,p,jg,art){const {pf,wpf}=zgSubjects(jg,art,r);const all=[...p
 
 function zgSlot(path,label,p,r,opt){opt=opt||{};const lib=zgLib(path),list=zgList(r,path);const isEng=path==='eng';
   const ent=(e,i)=>{const own=e.own!=null;const txt=own?e.own:zgEntryText(e,path,p);
-    return `<div class="zgent"><div class="zgerow"><select class="input zglv" data-path="${path}" data-i="${i}" aria-label="${esc(label)}: Kommentar wählen"><option value="">Kommentar wählen …</option>${lib.map((t,j)=>`<option value="${j}" ${!own&&e.lv===j?'selected':''}>${isEng?esc(zgFill(t,p).slice(p.vn.length+1,60))+'…':ZG_LV[j]}</option>`).join('')}<option value="own" ${own?'selected':''}>eigener Text</option></select>
+    return `<div class="zgent"><div class="zgerow"><select class="input zglv" data-path="${path}" data-i="${i}" aria-label="${esc(label)}: Kommentar wählen"><option value="">Kommentar wählen …</option>${lib.map((t,j)=>`<option value="${j}" ${!own&&e.lv===j?'selected':''}>${esc(zgFill(t,p,zgF(path)))}</option>`).join('')}<option value="own" ${own?'selected':''}>eigener Text</option></select>
       <button class="iconbtn sm" data-act="zg-edel" data-path="${path}" data-i="${i}" aria-label="Kommentar entfernen"><svg><use href="#i-x"/></svg></button></div>
       ${own||e.lv!=null?`<textarea class="input zgtxt ${own?'own':''}" rows="2" data-path="${path}" data-i="${i}" placeholder="Eigenen Text schreiben – {V} steht für den Vornamen" aria-label="${esc(label)}: Text">${esc(txt)}</textarea>${own&&txt.trim()?`<button class="link zgsb" data-act="zg-saveb" data-path="${path}" data-i="${i}">Als eigenen Kommentar merken</button>`:''}`:''}</div>`};
   const ownB=((S.zgOwnB||{})[path]||[]);
@@ -2907,39 +2967,52 @@ function zgInput(p,r){const jg=zgJg(p.k),art=zgArtDef(),{pf,wpf}=zgSubjects(jg,a
   return `<section class="zgbox"><div class="row2"><div class="field"><label for="zgRel">Religion / Ethik</label><select class="input" id="zgRel">${ZG_REL.map(f=>`<option value="${f}" ${r.rel===f?'selected':''}>${fach(f).n}</option>`).join('')}</select></div>
       ${jg>=7?`<div class="field"><label for="zgMk">Musik oder Kunst</label><select class="input" id="zgMk">${['Mu','Ku'].map(f=>`<option value="${f}" ${r.mk===f?'selected':''}>${fach(f).n}</option>`).join('')}</select></div>`:''}</div>
       ${jg>=8?`<div class="field" style="max-width:340px"><label for="zgBo">Berufsorientierendes Wahlpflichtfach</label><select class="input" id="zgBo">${['T','WiK','ES'].map(f=>`<option value="${f}" ${r.bo===f?'selected':''}>${fach(f).n}</option>`).join('')}</select></div>`:''}
+      <div class="field" style="max-width:340px"><label for="zgGs">Im Zeugnistext</label><select class="input" id="zgGs"><option value="m" ${zgG(p)==='m'?'selected':''}>${esc(p.vn)} · der Schüler · er</option><option value="w" ${zgG(p)==='w'?'selected':''}>${esc(p.vn)} · die Schülerin · sie</option></select></div>
       <label class="toggle" for="zgDaz"><span>Deutsch als Zweitsprache statt Deutsch</span><input type="checkbox" class="sw" id="zgDaz" ${r.daz?'checked':''}></label>
+      ${r.daz?`<p class="small muted" style="margin:4px 0 8px">Der festgelegte DaZ-Satz wird ${art==='zwi'?'im oberen Teil':'im Feld Deutsch'} eingefügt.</p><div class="field"><label for="zgNv">Notenverzicht nach § 13 (2) MSO – Fächer <span class="muted">(optional)</span></label><input class="input" id="zgNv" value="${esc(r.nv||'')}" placeholder="z. B. Ethik, Geschichte/Politik/Geographie"></div>`:''}
       <div class="litools" style="margin-top:8px"><button class="secondary" data-act="zg-take"><svg><use href="#i-chart"/></svg>Noten aus der Notenliste übernehmen</button></div></section>
+    <p class="small muted zgtense">${art==='zwi'?'Zwischenzeugnis: Texte im Präsens.':'Dieses Zeugnis: Texte im Präteritum.'} Eigene Texte bitte in derselben Zeitform schreiben.</p>
     ${box('Sozialverhalten',ZG_SEC.soz.cats.map(([id,n])=>zgSlot('soz.'+id,n,p,r)).join(''))}
     ${box('Lern- und Arbeitsverhalten',ZG_SEC.lern.cats.map(([id,n])=>zgSlot('lern.'+id,n,p,r)).join(''))}
     ${obs.length?`<section class="zgbox"><div class="zgbh"><h3>Beobachtungen zu ${esc(p.vn)}</h3></div><ul class="rows harows">${obs.map(o=>`<li><div class="grow"><div class="t">${esc(o.t)}</div><div class="s">${esc(o.c)} · ${dDE(o.date)}</div></div></li>`).join('')}</ul></section>`:''}
     <div class="zgsect">Pflichtfächer</div>${pf.map(fachBox).join('')}
     ${wpf.length?`<div class="zgsect">Wahlpflichtfächer</div>${wpf.map(fachBox).join('')}`:''}
-    ${box('Zusätzliches Engagement',zgSlot('eng','Engagement in Klasse und Schule',p,r)+`<div class="zgsl2">Wahlfächer und Arbeitsgemeinschaften</div>${r.wahl.map((w,i)=>`<div class="zgwahl"><input class="input zgw" data-i="${i}" data-k="n" value="${esc(w.n)}" placeholder="z. B. Schulband" aria-label="Wahlfach"><input class="input zgw" data-i="${i}" data-k="t" value="${esc(w.t||'')}" placeholder="Bemerkung zum Fortschritt" aria-label="Bemerkung"><button class="iconbtn sm" data-act="zg-wdel" data-i="${i}" aria-label="Wahlfach entfernen"><svg><use href="#i-x"/></svg></button></div>`).join('')}<button class="link" data-act="zg-wadd"><svg style="width:16px;height:16px"><use href="#i-plus"/></svg> Wahlfach / AG</button>`)}
+    ${(()=>{const ns=r.ns||{},d=ZG_NS[ns.typ],il=[...pf,...wpf].filter(f=>r.n[f]==='i.L.'),pf0=p.f||{};
+      return box('Notenschutz, M-Niveau, Förderbedarf',`<div class="field"><label for="zgNs">Notenschutz</label><select class="input" id="zgNs"><option value="">Kein Notenschutz</option>${Object.entries(ZG_NS).map(([k,v])=>`<option value="${k}" ${ns.typ===k?'selected':''}>${v.n}</option>`).join('')}</select></div>
+      ${d?`<div class="field"><label for="zgNsF">${ns.typ==='ls'?'Leseleistung':'Rechtschreibleistung'} nicht bewertet</label><input class="input" id="zgNsF" value="${esc(ns.f||d.f)}" placeholder="${esc(d.f)}"></div>${ns.typ==='lrs'?`<div class="field"><label for="zgNsV">Vorlesen nicht bewertet in den Fächern</label><input class="input" id="zgNsV" value="${esc(ns.v||d.v)}"></div>`:''}<p class="small muted" style="margin:0 0 8px">Steht ${jg<=7?'unter „Individuelle Lernentwicklung“':'unter der Notenauflistung'}.</p>`:''}
+      <p class="small muted" style="margin:0 0 10px">Nur bei Notenschutz. Bei Nachteilsausgleich keine Bemerkung im Zeugnis.${pf0.ns?' <b>Laut Schülerakte: Notenschutz.</b>':pf0.na?' Laut Schülerakte: Nachteilsausgleich.':''}</p>
+      <label class="toggle" for="zgMe"><span>Englisch auf M-Niveau gefördert</span><input type="checkbox" class="sw" id="zgMe" ${r.mn&&r.mn.e?'checked':''}></label>
+      <label class="toggle" for="zgMm"><span>Mathematik auf M-Niveau gefördert und benotet</span><input type="checkbox" class="sw" id="zgMm" ${r.mn&&r.mn.m?'checked':''}></label>
+      <p class="small muted" style="margin:4px 0 10px">Nur für Schüler mit Berechtigung für die M-Klasse bzw. M-Förderung.</p>
+      <p class="small muted" style="margin:0">Sonderpädagogischer Förderbedarf: Steht bei einem Fach „i.L.“, fügt die App den festgelegten Satz zum Förderplan automatisch ein.${il.length?' Betroffen: '+esc(il.map(zgName).join(', '))+'.':''}</p>`)})()}
+    ${box('Zusätzliches Engagement',zgSlot('eng','Engagement in Klasse und Schule',p,r)+`<div class="zgsl2">Arbeitsgemeinschaften <span class="small muted" style="font-weight:400">– keine Wertung</span></div>${r.wahl.map((w,i)=>`<div class="zgwahl"><input class="input zgw" data-i="${i}" data-k="n" value="${esc(w.n)}" placeholder="z. B. Schulband" aria-label="Arbeitsgemeinschaft"><select class="input zgwh" data-i="${i}" aria-label="Halbjahr">${Object.entries(ZG_HJ).map(([k,v])=>`<option value="${k}" ${w.hj===k?'selected':''}>im ${v}</option>`).join('')}</select><button class="iconbtn sm" data-act="zg-wdel" data-i="${i}" aria-label="Arbeitsgemeinschaft entfernen"><svg><use href="#i-x"/></svg></button></div>`).join('')}<button class="link" data-act="zg-wadd"><svg style="width:16px;height:16px"><use href="#i-plus"/></svg> Arbeitsgemeinschaft</button>`)}
     ${box('Bemerkungen',`<textarea class="input" id="zgBem" rows="2" placeholder="Freie Bemerkung – {V} steht für den Vornamen" aria-label="Bemerkungen">${esc(r.bem||'')}</textarea>`)}
     ${box(art==='zwi'?'Gefährdung':(art==='jah'?(jg===9?'Abschlussvermerk':'Vorrückensvermerk'):'Vermerk'),`<div class="zgcheck ${chk.ok===false?'bad':chk.ok?'ok':''}">${esc(chk.msg)}${art==='abs'&&chk.ok===false?'<div class="small">Ohne erfolgreichen Abschluss gibt es ein Jahreszeugnis statt eines Abschlusszeugnisses.</div>':''}<div class="small muted">Vorrückungsfächer: alle Pflicht- und Wahlpflichtfächer außer Sport (§ 15 MSO)${jg===9?'; die Projektprüfung zählt mit, wenn der Abschluss dadurch erreicht wird (§ 19 MSO)':''}. Die Entscheidung trifft die Lehrerkonferenz.</div></div>
+      ${art==='zwi'?`<div class="field" style="margin:10px 0 0"><label for="zgVsel">Abstufung (Vorgabe der Schule, § 15 Abs. 2 MSO)</label><select class="input" id="zgVsel"><option value="auto" ${r.vorr==null?'selected':''}>Vorschlag aus den Noten</option><option value="none" ${r.vorr===''?'selected':''}>Kein Vermerk</option>${zgGefT(jg).map((t,i)=>`<option value="${i}" ${r.vorr===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`:''}
       <textarea class="input" id="zgVorr" rows="2" style="margin-top:10px" placeholder="kein Vermerk" aria-label="Vermerk">${esc(r.vorr!=null?r.vorr:verm)}</textarea><span class="small muted">Wird aus den Noten vorgeschlagen; Wortlaut bitte mit dem amtlichen Muster abgleichen.${r.vorr!=null?' <button class="linkin" data-act="zg-vauto">Wieder automatisch</button>':''}</span>`)}
     ${jg===9&&art!=='zwi'?box('Entlassung',`<textarea class="input" id="zgEnt" rows="2" placeholder="optional" aria-label="Entlassung">${esc(r.ent||'')}</textarea>`):''}
     ${jg>=8?'<p class="small muted">Hinweis Jgst. 8/9: Keine Formulierungen, die den Übertritt ins Berufsleben erschweren (§ 18 Abs. 2 MSO).</p>':''}`}
 
 function zgPreview(p,r){const c=zgCfg(),art=zgArtDef(),jg=zgJg(p.k),{pf,wpf}=zgSubjects(jg,art,r);
-  const row=f=>{const t=zgFachText(r,p,f);return `<div class="zgrow"><span>${esc(zgName(f))}</span><b>${esc(r.n[f]||'')}</b></div>${t?`<div class="zgft">${esc(t)}</div>`:''}`};
-  const verm=zgFill(zgVermerk(r,jg,art),p),eng=zgJoin(r,'eng',p),soz=zgSecText(r,p,'soz'),lern=zgSecText(r,p,'lern');const qa=art==='qa'?zgQa(p):null;
+  const O=zgOut(r,p,jg,art);const row=f=>{const t=O.fach[f];return `<div class="zgrow"><span>${esc(zgName(f))}</span><b>${esc(r.n[f]||'')}</b></div>${t?`<div class="zgft">${esc(zgEnd(t))}</div>`:''}`};
+  const eng=O.eng,soz=O.soz,lern=O.lern;const qa=art==='qa'?zgQa(p):null;
   const sub=art==='abs'?`hat die Jahrgangsstufe 9 besucht und den erfolgreichen Abschluss der Mittelschule erworben.`:art==='qa'?`hat den qualifizierenden Abschluss der Mittelschule erworben.`:'';
-  return `<div class="zgpage" aria-label="Vorschau ${ZG_ART[art]} ${esc(pname(p))}">
+  return `<div class="zgpage" lang="de" aria-label="Vorschau ${ZG_ART[art]} ${esc(pname(p))}">
     <div class="zgsch">${esc(c.schule)}<div class="zgsmall">${esc(c.ort)}</div></div>
     <div class="zgline"><span>Schuljahr ${esc(c.sj)}</span><span>Jahrgangsstufe ${jg}</span></div>
     <div class="zgtitle">${ZG_TITLE[art]}</div>${art==='abs'?'<div class="zgsub">über den erfolgreichen Abschluss der Mittelschule</div>':art==='qa'?'<div class="zgsub">über den qualifizierenden Abschluss der Mittelschule</div>':''}
     <div class="zgfor">für</div><div class="zgname">${esc(pname(p))}</div>${p.geb&&art!=='zwi'?`<div class="zgfor">geboren am ${dDE(p.geb)}</div>`:''}${sub?`<div class="zgfor" style="margin-top:4px">${sub}</div>`:''}
-    ${soz||lern?`${soz?`<div class="zgsec"><b>Sozialverhalten:</b> ${esc(soz)}</div>`:''}${lern?`<div class="zgsec"><b>Lern- und Arbeitsverhalten:</b> ${esc(lern)}</div>`:''}`:'<div class="zgsec zgph2">-/-</div>'}
+    ${soz||lern?`${soz?`<div class="zgsec">${esc(zgEnd(soz))}</div>`:''}${lern?`<div class="zgsec">${esc(zgEnd(lern))}</div>`:''}`:'<div class="zgsec zgph2">-/-</div>'}${O.top.map(x=>`<div class="zgsec">${esc(zgEnd(x))}</div>`).join('')}
     <div class="zghd">Pflichtfächer</div>${pf.map(row).join('')}
     ${wpf.length?`<div class="zghd">Wahlpflichtfächer</div>${wpf.map(row).join('')}`:''}
+    ${O.nach.length?`${O.nachH?`<div class="zghd">${O.nachH}</div>`:''}${O.nach.map(x=>`<div class="zgsec"${O.nachH?' style="margin-top:2px"':''}>${esc(zgEnd(x))}</div>`).join('')}`:''}
     ${qa&&qa.gbT!=null?`<div class="zgsec"><b>Gesamtbewertung:</b> ${fmt1(qa.gbT)}</div>`:''}
-    ${eng||(r.wahl||[]).some(w=>w.n)?`<div class="zghd">Zusätzliches Engagement</div>${eng?`<div class="zgsec" style="margin-top:2px">${esc(eng)}</div>`:''}${r.wahl.filter(w=>w.n).map(w=>`<div class="zgsec" style="margin-top:2px"><b>${esc(w.n)}:</b> ${esc(w.t||'')}</div>`).join('')}`:''}
-    ${r.bem||verm||r.ent?`<div class="zghd">Bemerkungen</div><div class="zgsec" style="margin-top:2px">${[zgFill(r.bem,p),verm,zgFill(r.ent,p)].filter(Boolean).map(esc).join('<br>')}</div>`:''}
+    ${eng||O.ag.length?`<div class="zghd">Zusätzliches Engagement</div>${eng?`<div class="zgsec" style="margin-top:2px">${esc(zgEnd(eng))}</div>`:''}${O.ag.map(x=>`<div class="zgsec" style="margin-top:2px">${esc(zgEnd(x))}</div>`).join('')}`:''}
+    ${O.bem.length?`<div class="zghd">Bemerkungen</div>${O.bem.map(x=>`<div class="zgsec" style="margin-top:2px">${esc(zgEnd(x))}</div>`).join('')}`:''}
     <div class="zgdate">${esc(c.ort)}, ${dDE(zgDate(art))}</div>
     <div class="zgsig"><div><i></i>Schulleiter/in${c.sl?', '+esc(c.sl):''}</div><div><i></i>Klassenleiter/in${S.teacher?', '+esc(S.teacher):''}</div></div>
     ${art==='zwi'||art==='jah'?`<div class="zgsmall" style="margin-top:12px">Kenntnis genommen</div><div class="zgsig" style="margin-top:14px"><div><i></i>Ort, Datum</div><div><i></i>Unterschrift der/des Erziehungsberechtigten</div></div>`:''}
-    <div class="zglegend"><b>Erläuterung zur Bewertung</b><br>1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend; i. L. = individuelle Leistungsbewertung</div>
+    <div class="zglegend"><b>Erläuterung zur Bewertung</b><br>1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend; i.L. = individuelle Lernentwicklung</div>
     <div class="zgdraft">Entwurf – nicht das amtliche Formular</div></div>`}
 
 function renderZeugnis(){const k=zgClass(),cl=allClasses(),art=zgArtDef(),jg=zgJg(k),kids=zgKids();zgIdx=Math.max(0,Math.min(zgIdx,kids.length-1));const p=kids[zgIdx],vw=zgVw();
@@ -2977,9 +3050,16 @@ function zgBind(p){const $=id=>document.getElementById(id);const fsel=$('zgFach'
   document.querySelectorAll('.zglv').forEach(s=>s.addEventListener('change',()=>{const list=zgList(r,s.dataset.path),i=Number(s.dataset.i),e=list[i]||{};
     if(s.value==='own')list[i]={own:zgEntryText(e,s.dataset.path,p)};else if(s.value==='')list[i]={};else list[i]={lv:Number(s.value)};save();renderZeugnis()}));
   document.querySelectorAll('.zgtxt').forEach(t=>{t.addEventListener('input',()=>{const list=zgList(r,t.dataset.path),i=Number(t.dataset.i),e=list[i]||{};const base=e.lv!=null&&e.own==null?zgEntryText(e,t.dataset.path,p):null;
-    if(base!=null&&t.value.trim()===base.trim())return;list[i]={own:t.value,lv:e.lv};save();zgUpd()});t.addEventListener('change',()=>renderZeugnis())});
+    if(base!=null&&t.value.trim()===base.trim())return;list[i]={own:zgToV(t.value,p),lv:e.lv};save();zgUpd()});t.addEventListener('change',()=>renderZeugnis())});
   document.querySelectorAll('.zgn').forEach(s=>s.addEventListener('change',()=>{if(s.value)r.n[s.dataset.f]=s.value;else delete r.n[s.dataset.f];save();renderZeugnis()}));
   [['zgRel','rel'],['zgMk','mk'],['zgBo','bo']].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener('change',()=>{const old=r[k];r[k]=el.value;if(old&&old!==el.value)delete r.n[old];save();renderZeugnis()})});
+  const nv=$('zgNv');if(nv)nv.addEventListener('input',()=>{r.nv=nv.value;save();zgUpd()});
+  const nsS=$('zgNs');if(nsS)nsS.addEventListener('change',()=>{r.ns={typ:nsS.value,f:'',v:''};save();renderZeugnis()});
+  [['zgNsF','f'],['zgNsV','v']].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener('input',()=>{r.ns[k]=el.value;save();zgUpd()})});
+  [['zgMe','e'],['zgMm','m']].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener('change',()=>{r.mn[k]=el.checked;save();zgUpd()})});
+  document.querySelectorAll('.zgwh').forEach(sl=>sl.addEventListener('change',()=>{r.wahl[Number(sl.dataset.i)].hj=sl.value;save();zgUpd()}));
+  const vs=$('zgVsel');if(vs)vs.addEventListener('change',()=>{r.vorr=vs.value==='auto'?null:vs.value==='none'?'':zgGefT(zgJg(p.k))[Number(vs.value)];save();renderZeugnis()});
+  const gs=$('zgGs');if(gs)gs.addEventListener('change',()=>{p.gs=gs.value;save();renderZeugnis()});
   const dz=$('zgDaz');if(dz)dz.addEventListener('change',()=>{r.daz=dz.checked;const o=r.daz?'D':'DaZ',nn=r.daz?'DaZ':'D';if(r.n[o]){r.n[nn]=r.n[o];delete r.n[o]}save();renderZeugnis()});
   document.querySelectorAll('.zgw').forEach(inp=>inp.addEventListener('input',()=>{r.wahl[Number(inp.dataset.i)][inp.dataset.k]=inp.value;save();zgUpd()}));
   [['zgBem','bem'],['zgVorr','vorr'],['zgEnt','ent']].forEach(([id,k])=>{const el=$(id);if(el)el.addEventListener('input',()=>{r[k]=el.value;save();zgUpd()})});
@@ -2992,7 +3072,20 @@ function zgCfgSheet(body,title){const c=zgCfg();title.textContent='Schuldaten f�
     <p class="small muted">Klassenleitung: ${esc(S.teacher||'– in den Einstellungen –')}</p>`;
   document.getElementById('sheetSave').textContent='Sichern'}
 function zgCfgSave(){const c=zgCfg(),g=x=>document.getElementById(x).value.trim();const oldSj=c.sj;Object.assign(c,{schule:g('zcS')||c.schule,ort:g('zcO')||c.ort,sj:g('zcJ')||c.sj,zwiD:g('zcZ'),jahD:g('zcY'),sl:g('zcL')});save();toast(oldSj!==c.sj?'Gesichert · neues Schuljahr beginnt mit leeren Zeugnissen':'Schuldaten gesichert');return true}
-async function zgPdf(list){const doc=await pdfDoc(false),c=zgCfg(),art=zgArtDef(),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+let zgHyMod=null;
+async function zgHyph(){if(zgHyMod===null){zgHyMod=false;try{const m=await Promise.race([import('https://cdn.jsdelivr.net/npm/hyphen@1.14.1/de-1996/+esm'),new Promise((_,j)=>setTimeout(()=>j(new Error('timeout')),8000))]);const f=m.hyphenateSync||(m.default&&m.default.hyphenateSync);if(f)zgHyMod=f}catch(e){}}
+  return zgHyMod?(t=>{try{return zgHyMod(t,{minWordLength:6})}catch(_){return t}}):(t=>t)}
+function zgJustify(doc,text,x,w,lh,st){const SH='\u00AD',cl=t=>t.split(SH).join('');const sp=doc.getTextWidth(' ');const words=String(text).split(/\s+/).filter(Boolean);const lines=[];let cur=[],cw=0;
+  const push=(last)=>{if(cur.length)lines.push({ws:cur,last});cur=[];cw=0};
+  let i=0;while(i<words.length){let wd=words[i];const ww=doc.getTextWidth(cl(wd));const need=(cur.length?cw+sp:0)+ww;
+    if(need<=w){cur.push(cl(wd));cw=need;i++;continue}
+    const parts=wd.split(SH);let best=-1;for(let k=parts.length-1;k>=1;k--){const pre=parts.slice(0,k).join('')+'-';if((cur.length?cw+sp:0)+doc.getTextWidth(pre)<=w){best=k;break}}
+    if(best>0){cur.push(parts.slice(0,best).join('')+'-');push(false);words[i]=parts.slice(best).join(SH);continue}
+    if(!cur.length){cur.push(cl(wd));cw=ww;i++;push(false);continue}
+    push(false)}
+  push(true);
+  lines.forEach(L=>{st.need(lh);if(L.last||L.ws.length<2){doc.text(L.ws.join(' '),x,st.y)}else{const tw=L.ws.reduce((a,t)=>a+doc.getTextWidth(t),0);const gap=(w-tw)/(L.ws.length-1);let xx=x;L.ws.forEach(t=>{doc.text(t,xx,st.y);xx+=doc.getTextWidth(t)+gap})}st.y+=lh})}
+async function zgPdf(list){const hy=await zgHyph();const doc=await pdfDoc(false),c=zgCfg(),art=zgArtDef(),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
   list.forEach((p,pi)=>{if(pi)doc.addPage();const r=zgRec(p.id),jg=zgJg(p.k),{pf,wpf}=zgSubjects(jg,art,r);let y=18;const first=doc.getNumberOfPages();
     const newPage=()=>{doc.addPage();y=18;doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text(`${doc.getNumberOfPages()-first+1}. Seite des ${ZG_ART[art]==='Zwischenzeugnis'?'Zwischenzeugnisses':ZG_ART[art]==='Jahreszeugnis'?'Jahreszeugnisses':'Zeugnisses'} (Jahrgangsstufe ${jg}) für ${pname(p)}`,14,y);y+=10};
     const need=h=>{if(y+h>H-22)newPage()};
@@ -3004,18 +3097,20 @@ async function zgPdf(list){const doc=await pdfDoc(false),c=zgCfg(),art=zgArtDef(
     if(p.geb&&art!=='zwi'){doc.text('geboren am '+dDE(p.geb),W/2,y,{align:'center'});y+=6}
     if(art==='abs'||art==='qa'){doc.text(art==='abs'?'hat die Jahrgangsstufe 9 besucht und den erfolgreichen Abschluss der Mittelschule erworben.':'hat den qualifizierenden Abschluss der Mittelschule erworben.',W/2,y,{align:'center'});y+=6}
     y+=4;
-    const para=(lab,t,x0)=>{if(!t)return;x0=x0||14;doc.setFontSize(10);if(lab){need(10);doc.setFont('helvetica','bold');doc.text(pdfSafe(lab),x0,y);doc.setFont('helvetica','normal');y+=4.8}const lines=doc.splitTextToSize(pdfSafe(t),W-x0-14);lines.forEach(l=>{need(5);doc.text(l,x0,y);y+=4.6});y+=2};
-    const soz=zgSecText(r,p,'soz'),lern=zgSecText(r,p,'lern');if(soz||lern){para('Sozialverhalten:',soz);para('Lern- und Arbeitsverhalten:',lern)}else{doc.text('-/-',14,y);y+=6}
+    const st={get y(){return y},set y(v){y=v},need:h=>need(h)};
+    const para=(lab,t,x0)=>{if(!t)return;x0=x0||14;const fs=doc.getFontSize();if(lab){need(10);doc.setFont('helvetica','bold');doc.text(pdfSafe(lab),x0,y);doc.setFont('helvetica','normal');y+=fs*.46}zgJustify(doc,hy(pdfSafe(zgEnd(t))),x0,W-x0-14,fs*.46,st);y+=2};
+    const O=zgOut(r,p,jg,art);const soz=O.soz,lern=O.lern;if(soz||lern){para('',soz);para('',lern)}else{doc.text('-/-',14,y);y+=6}O.top.forEach(x=>para('',x));
     const head=t=>{need(12);doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.text(t,14,y);y+=2;doc.setDrawColor(150);doc.line(14,y,W-14,y);y+=5;doc.setFont('helvetica','normal');doc.setFontSize(10)};
-    const subj=f=>{need(8);doc.setFont('helvetica','bold');doc.text(pdfSafe(zgName(f)),16,y);doc.setDrawColor(190);doc.rect(W-34,y-4,20,5.6);doc.setFont('helvetica','normal');doc.text(String(r.n[f]||''),W-24,y,{align:'center'});y+=5;const t=zgFachText(r,p,f);if(t){doc.setFontSize(9);para('',t,16);doc.setFontSize(10)}y+=1.5};
+    const subj=f=>{need(8);doc.setFont('helvetica','bold');doc.text(pdfSafe(zgName(f)),16,y);doc.setDrawColor(190);doc.rect(W-34,y-4,20,5.6);doc.setFont('helvetica','normal');doc.text(String(r.n[f]||''),W-24,y,{align:'center'});y+=5;const t=O.fach[f];if(t){doc.setFontSize(9);para('',t,16);doc.setFontSize(10)}y+=1.5};
     head('Pflichtfächer');pf.forEach(subj);if(wpf.length){y+=2;head('Wahlpflichtfächer');wpf.forEach(subj)}
+    if(O.nach.length){y+=2;if(O.nachH)head(O.nachH);O.nach.forEach(x=>para('',x))}
     if(art==='qa'){const q=zgQa(p);if(q&&q.gbT!=null){y+=2;para('Gesamtbewertung:',fmt1(q.gbT))}}
-    const eng=zgJoin(r,'eng',p),wl=(r.wahl||[]).filter(w=>w.n);if(eng||wl.length){y+=2;head('Zusätzliches Engagement');para('',eng);wl.forEach(w=>para(w.n+':',w.t||''))}
-    const bem=[zgFill(r.bem,p),zgFill(zgVermerk(r,jg,art),p),zgFill(r.ent,p)].filter(Boolean).join('\n');if(bem){y+=2;head('Bemerkungen');para('',bem)}
+    const eng=O.eng,wl=O.ag;if(eng||wl.length){y+=2;head('Zusätzliches Engagement');para('',eng);wl.forEach(x=>para('',x))}
+    const bem=O.bem;if(bem.length){y+=2;head('Bemerkungen');bem.forEach(x=>para('',x))}
     need(art==='zwi'||art==='jah'?62:42);y=Math.max(y+8,H-(art==='zwi'||art==='jah'?72:52));
     doc.setFontSize(10);doc.text(c.ort+', '+dDE(zgDate(art)),W/2,y,{align:'center'});y+=16;doc.setDrawColor(110);doc.line(14,y,90,y);doc.line(W-90,y,W-14,y);doc.setFontSize(8.5);doc.text(pdfSafe('Schulleiter/in'+(c.sl?', '+c.sl:'')),14,y+4);doc.text(pdfSafe('Klassenleiter/in'+(S.teacher?', '+S.teacher:'')),W-90,y+4);
     if(art==='zwi'||art==='jah'){y+=12;doc.text('Kenntnis genommen',14,y);y+=12;doc.line(14,y,90,y);doc.line(W-90,y,W-14,y);doc.text('Ort, Datum',14,y+4);doc.text('Unterschrift der/des Erziehungsberechtigten',W-90,y+4)}
-    y+=12;doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('Erläuterung zur Bewertung',W/2,y,{align:'center'});doc.setFont('helvetica','normal');doc.text('1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend; i. L. = individuelle Leistungsbewertung',W/2,y+4,{align:'center'});
+    y+=12;doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('Erläuterung zur Bewertung',W/2,y,{align:'center'});doc.setFont('helvetica','normal');doc.text('1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend; i.L. = individuelle Lernentwicklung',W/2,y+4,{align:'center'});
     const last=doc.getNumberOfPages();for(let pg=first;pg<=last;pg++){doc.setPage(pg);doc.setTextColor(150);doc.setFontSize(7.5);doc.text('Entwurf – nicht das amtliche Formular',W/2,H-7,{align:'center'});doc.setTextColor(0)}doc.setPage(last)});
   return doc.output('blob')}
 XP.zeugnis={t:'Zeugnisse exportieren',opts:[],
@@ -3024,7 +3119,7 @@ XP.zeugnis={t:'Zeugnisse exportieren',opts:[],
    {k:'csv',l:'Notenübersicht der Klasse (CSV)',run:async()=>{const art=zgArtDef(),jg=zgJg(zgClass()),kids=zgKids();const cols=[...new Set(kids.flatMap(p=>{const s=zgSubjects(jg,art,zgRec(p.id));return [...s.pf,...s.wpf]}))];
      return csvOf([['Name','Vorname',...cols.map(zgName),'Durchschnitt','Stand'],...kids.map(p=>{const r=zgRec(p.id),c=zgCheck(r,jg,art);return [p.nn,p.vn,...cols.map(f=>r.n[f]||''),c.avg!=null?fmtN(c.avg):'',zgState(r,p,jg,art)]})])},name:()=>`Notenuebersicht_${zgClass()}.csv`},
    {k:'txt',l:'Zeugnistexte zum Übertragen ins Zeugnisprogramm (TXT)',run:async()=>{const art=zgArtDef(),jg=zgJg(zgClass());return new Blob([zgKids().map(p=>{const r=zgRec(p.id),{pf,wpf}=zgSubjects(jg,art,r);
-     return [pname(p),'Sozialverhalten: '+zgSecText(r,p,'soz'),'Lern- und Arbeitsverhalten: '+zgSecText(r,p,'lern'),...[...pf,...wpf].map(f=>{const t=zgFachText(r,p,f);return t?zgName(f)+': '+t:''}),zgJoin(r,'eng',p)?'Zusätzliches Engagement: '+zgJoin(r,'eng',p):'',...[zgFill(r.bem,p),zgFill(zgVermerk(r,jg,art),p),zgFill(r.ent,p)].filter(Boolean).map(x=>'Bemerkung: '+x)].filter(Boolean).join('\n')}).join('\n\n----------\n\n')],{type:'text/plain;charset=utf-8'})},name:()=>`Zeugnistexte_${zgClass()}.txt`}]};
+     const O=zgOut(r,p,jg,art);return [pname(p),zgEnd(O.soz),zgEnd(O.lern),...O.top.map(zgEnd),...[...pf,...wpf].map(f=>{const t=O.fach[f];return t?zgName(f)+': '+zgEnd(t):''}),...O.nach.map(x=>(O.nachH?O.nachH+': ':'Unter der Notenauflistung: ')+zgEnd(x)),O.eng?'Zusätzliches Engagement: '+zgEnd(O.eng):'',...O.ag.map(x=>'Arbeitsgemeinschaft: '+zgEnd(x)),...O.bem.map(x=>'Bemerkung: '+zgEnd(x))].filter(Boolean).join('\n')}).join('\n\n----------\n\n')],{type:'text/plain;charset=utf-8'})},name:()=>`Zeugnistexte_${zgClass()}.txt`}]};
 
 /* Listen */
 const LTYPE={check:'Abhaken',geld:'Geld einsammeln',text:'Eintrag je Schüler'};
@@ -3113,11 +3208,12 @@ XP.listen={t:'Listen exportieren',opts:[],
 /* Klassen-QR für die Schüler-App */
 const APP_URL_DEF='https://claude.ai/artifact/DAbBcjfztkJN62ERg5AGaB';
 const QL_DEF=[
- {id:'messenger',n:'ByCS-Messenger',s:'Chats mit Klasse und Kollegium',i:'i-chat',c:'#3b82c4',u:'https://www.bycs.de/messenger'},
- {id:'mail',n:'Dienst-E-Mail',s:'Postfach im Browser',i:'i-send',c:'#B25A5F',u:'https://mail.schule.bayern.de/'},
- {id:'drive',n:'ByCS-Drive',s:'Dateien und Freigaben',i:'i-folder',c:'#66A590',u:'https://www.bycs.de/drive'},
- {id:'lernaufgaben',n:'Digitale Lernaufgaben',s:'Aufgabensammlung des ISB',i:'i-book',c:'#c9a227',u:'https://lernaufgaben.mebis.bycs.de/'},
- {id:'ais',n:'AIS.chat',s:'KI-Chatbot über das ByCS-Dashboard',i:'i-star',c:'#7a6fb0',u:'https://www.bycs.de/'}];
+ {id:'messenger',n:'Messenger',s:'Chats mit Klasse und Kollegium',i:'i-chat',c:'#3b82c4',u:'https://messenger.bycs.de/#/home'},
+ {id:'lernplattform',n:'Lernplattform',s:'ByCS – meine Kurse',i:'i-book',c:'#c9a227',u:'https://lernplattform.bycs.de/my/courses.php'},
+ {id:'drive',n:'ByCS-Drive',s:'Meine Dateien',i:'i-folder',c:'#66A590',u:'https://7743.drive.bycs.de/files/spaces/personal/'},
+ {id:'ais',n:'AIS.chat',s:'KI-Chatbot für Schulen',i:'i-star',c:'#7a6fb0',u:'https://app.ais-chat.schule/'},
+ {id:'mail',n:'Dienst-E-Mail',s:'Eigenes Postfach (Outlook im Web)',i:'i-send',c:'#B25A5F',u:'https://mail.schule.bayern.de/owa/#path=/mail'},
+ {id:'lernaufgaben',off:1,n:'Digitale Lernaufgaben',s:'Aufgabensammlung des ISB',i:'i-book',c:'#c9a227',u:'https://lernaufgaben.mebis.bycs.de/'}];
 const qlUrl=id=>((S.qlinks||{})[id])||(QL_DEF.find(q=>q.id===id)||{}).u;
 const qlOpen=id=>{const u=qlUrl(id);if(u)window.open(u,'_blank','noopener')};
 function aisPrompt(L,sl){const F=sl?fach(sl.f).n:'';const k=sl?sl.k:'';const jg=(k.match(/\d+/)||['9'])[0];
@@ -3406,7 +3502,7 @@ function openSheet(mode,type){
       <div class="field"><label for="sTeacher">Anrede</label><input class="input" id="sTeacher" value="${esc(S.teacher)}"></div></div>
       <div class="field"><label for="sApp">Adresse der Schüler-App (für den QR-Code)</label><input class="input" id="sApp" type="url" value="${esc(appUrl())}" placeholder="https://…"></div>
       <div class="field"><label>Sicherheit</label><button class="xpbtn" data-act="sec"><span class="xpk">${SEC.on()?'Sperre an':'Sperre aus'}</span><span>App-Sperre und Sicherung in ByCS-Drive</span><svg><use href="#i-right"/></svg></button></div>
-      <div class="field"><label>Adressen im Schnellzugriff</label>${QL_DEF.map(q=>`<div class="row2" style="align-items:center;margin-bottom:6px"><span class="small" style="flex:0 0 150px">${q.n}</span><input class="input" type="url" inputmode="url" data-ql="${q.id}" value="${esc(qlUrl(q.id))}" placeholder="${esc(q.u)}"></div>`).join('')}<p class="small muted" style="margin:4px 0 0">Leer lassen setzt die Standardadresse. AIS.chat öffnest du in Bayern über das ByCS-Dashboard; hast du eine direkte Adresse, trag sie hier ein.</p></div>
+      <div class="field"><label>Adressen im Schnellzugriff</label>${QL_DEF.filter(q=>!q.off).map(q=>`<div class="row2" style="align-items:center;margin-bottom:6px"><span class="small" style="flex:0 0 150px">${q.n}</span><input class="input" type="url" inputmode="url" data-ql="${q.id}" value="${esc(qlUrl(q.id))}" placeholder="${esc(q.u)}"></div>`).join('')}<p class="small muted" style="margin:4px 0 0">Leer lassen setzt die Standardadresse. AIS.chat öffnest du in Bayern über das ByCS-Dashboard; hast du eine direkte Adresse, trag sie hier ein.</p></div>
       <div class="field"><label>Speicherort</label><div class="input" style="display:flex;align-items:center;gap:8px"><span class="dot"></span>ByCS-Drive – Anbindung folgt</div></div>
       <div class="field"><label>Module</label><button class="xpbtn" data-act="mods"><span class="xpk">${MODULES.filter(modOn).length}/${MODULES.length}</span><span>Module ein- und ausblenden</span><svg><use href="#i-right"/></svg></button></div>
       <button class="link" data-act="reset" style="color:var(--red);padding-left:0">Beispieldaten zurücksetzen</button>`;
@@ -3530,7 +3626,7 @@ document.addEventListener('click',e=>{
   if(act==='zg-edel'){const p=zgKids()[zgIdx];if(p){zgList(zgRec(p.id),a.dataset.path).splice(Number(a.dataset.i),1);save();renderZeugnis()}return}
   if(act==='zg-saveb'){const p=zgKids()[zgIdx];if(p){const e=zgList(zgRec(p.id),a.dataset.path)[Number(a.dataset.i)];if(e&&e.own){S.zgOwnB=S.zgOwnB||{};const k=a.dataset.path;const t=e.own.split(p.vn).join('{V}');S.zgOwnB[k]=[...(S.zgOwnB[k]||[]).filter(x=>x!==t),t].slice(-8);save();renderZeugnis();toast('Als eigener Kommentar gemerkt')}}return}
   if(act==='zg-useb'){const p=zgKids()[zgIdx];if(p){const t=((S.zgOwnB||{})[a.dataset.path]||[])[Number(a.dataset.i)];if(t!=null){const list=zgList(zgRec(p.id),a.dataset.path);const empty=list.findIndex(e=>e.lv==null&&e.own==null);const ent={own:t};if(empty>=0)list[empty]=ent;else list.push(ent);save();renderZeugnis()}}return}
-  if(act==='zg-wadd'){const p=zgKids()[zgIdx];if(p){zgRec(p.id).wahl.push({n:'',t:''});save();renderZeugnis()}return}
+  if(act==='zg-wadd'){const p=zgKids()[zgIdx];if(p){zgRec(p.id).wahl.push({n:'',hj:zgArtDef()==='zwi'?'1':'12'});save();renderZeugnis()}return}
   if(act==='zg-wdel'){const p=zgKids()[zgIdx];if(p){zgRec(p.id).wahl.splice(Number(a.dataset.i),1);save();renderZeugnis()}return}
   if(act==='zg-vauto'){const p=zgKids()[zgIdx];if(p){zgRec(p.id).vorr=null;save();renderZeugnis()}return}
   if(act==='sk-open'){skOpen(a.dataset.k||null);return}
