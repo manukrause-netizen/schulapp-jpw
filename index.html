@@ -53,7 +53,7 @@ button{cursor:pointer}
 .nav button[aria-current="page"] svg{color:#fff}
 .nav button:not([aria-current="page"]):hover{background:var(--fill)}
 .sidefoot{margin-top:auto;padding:14px 8px 0;display:flex;flex-direction:column;gap:8px}
-.sync{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--label2)}
+.sync{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--label2);background:none;border:0;padding:6px 4px;font-family:inherit;cursor:pointer;text-align:left;width:100%}.sync.ok .dot{background:var(--green,#34C759)}.sync.due .dot{background:var(--orange)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex:none}
 /* Inhalt */
 .main{overflow-y:auto;padding:calc(env(safe-area-inset-top) + 12px) max(28px,env(safe-area-inset-right)) 40px 28px}
@@ -798,7 +798,7 @@ body.noscroll{overflow:hidden}
     <div class="stripe" aria-hidden="true"></div>
     <ul class="nav" id="nav"></ul>
     <div class="sidefoot">
-      <div class="sync"><span class="dot" aria-hidden="true"></span><span>ByCS-Drive: noch nicht verbunden</span></div>
+      <button class="sync" id="syncBtn" type="button" title="ByCS-Sicherung"><span class="dot" aria-hidden="true"></span><span id="syncTxt">ByCS-Sicherung: noch nicht eingerichtet</span></button>
       <div class="nav"><button id="settingsBtn"><svg><use href="#i-gear"/></svg>Einstellungen</button></div>
     </div>
   </aside>
@@ -874,7 +874,7 @@ const SEC=(()=>{
 
   /* ---------- Start ---------- */
   function startApp(){if(started)return;started=true;const t=document.getElementById('appMain');const sc=document.createElement('script');sc.textContent=t.textContent;document.body.appendChild(sc);
-    if(key){watch();nag()}}
+    if(key){watch();nag()}status();const sb=document.getElementById('syncBtn');if(sb)sb.onclick=()=>{meta().bkSetup?panel():bycsSetup()}}
   function lockScreen(){addCss();const d=document.createElement('div');d.id='secLock';
     d.innerHTML=`<form class="secbox" id="secUnlock" autocomplete="off"><img class="seclogo" alt="Schullogo" src="${logo()}"><h2 style="text-align:center">SchulApp gesperrt</h2><p style="text-align:center">PIN eingeben, um die Daten auf diesem Gerät zu entschlüsseln.</p>
       ${pinField('secPin','PIN')}<div class="secerr" id="secErr" aria-live="polite"></div><button class="secbtn" type="submit">Entsperren</button><button class="secbtn alt" type="button" id="secForgot">PIN vergessen?</button></form>`;
@@ -913,16 +913,19 @@ const SEC=(()=>{
     modal(`<h2>Sicherheit und Sicherung</h2>
       <div class="secrow"><span>App-Sperre</span><b>${on()?'an · '+mins()+' Min.':'aus'}</b></div>
       <div class="secrow"><span>Letzte Sicherung</span><b>${esc(lbt)}</b></div>
+      <div class="secrow"><span>ByCS-Sicherung</span><b>${m.bkSetup?(m.bkFolder?'Ordner festgelegt':'Meine Dateien')+' · alle '+every()+' T.':'nicht eingerichtet'}</b></div>
       <p style="margin-top:12px">${on()?'Die Daten sind auf diesem Gerät mit deiner PIN verschlüsselt.':'Ohne App-Sperre liegen die Daten unverschlüsselt im Browser-Speicher dieses Geräts. Vor echten Schülerdaten einschalten.'}</p>
       ${on()?`<label for="secMin">Automatisch sperren nach</label><select id="secMin">${[2,5,10,15,30].map(n=>`<option value="${n}" ${n===mins()?'selected':''}>${n} Minuten ohne Nutzung</option>`).join('')}</select>
         <button class="secbtn" id="secLockNow">Jetzt sperren</button>`:`<button class="secbtn" id="secSetup">App-Sperre einrichten</button>`}
+      <button class="secbtn ${m.bkSetup?'alt':''}" id="secBy">${m.bkSetup?'ByCS-Sicherung ändern':'ByCS-Sicherung einrichten'}</button>
+      ${m.bkSetup?`<a class="secbtn alt" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="${esc(folder()||DRIVE_DEF)}" target="_blank" rel="noopener">Sicherungsordner öffnen</a>`:''}
       <button class="secbtn alt" id="secBackup">Sicherung erstellen (für ByCS-Drive)</button>
       <button class="secbtn alt" id="secRestore">Sicherung einlesen</button>
       ${on()?'<button class="secbtn alt" id="secChange">PIN ändern</button><button class="secbtn red" id="secOff">App-Sperre ausschalten</button>':''}
       <button class="secbtn alt" id="secClose">Schließen</button>
       <input type="file" id="secFile" accept=".json,application/json" hidden>`);
     const $=id=>document.getElementById(id),bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};
-    bind('secClose',closeModal);bind('secSetup',setup);bind('secLockNow',askLock);bind('secBackup',backup);bind('secChange',changePin);bind('secOff',disable);
+    bind('secClose',closeModal);bind('secBy',bycsSetup);bind('secSetup',setup);bind('secLockNow',askLock);bind('secBackup',backup);bind('secChange',changePin);bind('secOff',disable);
     bind('secRestore',()=>$('secFile').click());const f=$('secFile');f.onchange=()=>{if(f.files[0])restore(f.files[0])};
     const sm=$('secMin');if(sm)sm.onchange=()=>{setMeta({lock:Number(sm.value)});note('Sperrzeit geändert')}}
   function pinOk(a,b,err){if(a.length<6){err.textContent='Die PIN braucht mindestens 6 Zeichen.';return false}if(a!==b){err.textContent='Die beiden Eingaben stimmen nicht überein.';return false}return true}
@@ -956,17 +959,17 @@ const SEC=(()=>{
     const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return'ok'}
   async function writeBackup(k,sl){await flush();const o=await enc(k,sl,current()||'{}');
     const out=JSON.stringify(Object.assign({app:'SchulApp JPW',typ:'Sicherung',lehrkraft:teacher(),erstellt:new Date().toISOString(),hinweis:'Verschlüsselt. Öffnen nur in der SchulApp mit der PIN bzw. dem Sicherungspasswort.'},o));
-    const plain=current()||'{}';const r=await deliver(fileName(),out);if(r==='ok'){setMeta({lastBackup:new Date().toISOString(),bkHash:await hash(plain)});const n=document.getElementById('secNag');if(n)n.remove()}return r}
+    const plain=current()||'{}';const r=await deliver(fileName(),out);if(r==='ok'){setMeta({lastBackup:new Date().toISOString(),bkHash:await hash(plain)});const n=document.getElementById('secNag');if(n)n.remove();status()}return r}
   function backup(){
     const intro=`<p>Die Datei ist verschlüsselt und trägt deinen Namen. Speichere sie im Teilen-Menü in deinem <b>ByCS-Drive</b> – mit der ByCS-Drive-App oder in der Dateien-App –, am besten in einem eigenen Ordner „SchulApp-Sicherung“.</p>`;
     if(key){modal(`<h2>Sicherung erstellen</h2>${intro}<p>Geschützt mit deiner aktuellen PIN.</p><div class="secerr" id="secErr"></div><button class="secbtn" id="secGo">Sicherung erstellen</button><button class="secbtn alt" id="secCancel">Zurück</button>`);
       document.getElementById('secCancel').onclick=panel;
-      document.getElementById('secGo').onclick=async()=>{const err=document.getElementById('secErr');err.textContent='Erstelle …';try{const r=await writeBackup(key,salt);err.textContent='';if(r==='ok'){panel();note('Sicherung erstellt')}else err.textContent='Abgebrochen.'}catch(x){err.textContent='Fehler: '+(x&&x.message||x)}};return}
+      document.getElementById('secGo').onclick=async()=>{const err=document.getElementById('secErr');err.textContent='Erstelle …';try{const r=await writeBackup(key,salt);err.textContent='';if(r==='ok'){note('Sicherung erstellt');uploadHint()}else err.textContent='Abgebrochen.'}catch(x){err.textContent='Fehler: '+(x&&x.message||x)}};return}
     modal(`<h2>Sicherung erstellen</h2>${intro}<p>Lege ein Sicherungspasswort fest (mindestens 6 Zeichen). Ohne dieses Passwort lässt sich die Datei nicht öffnen.</p>
       ${pinField('secA','Sicherungspasswort','new-password')}${pinField('secB','Wiederholen','new-password')}<div class="secerr" id="secErr"></div><button class="secbtn" id="secGo">Sicherung erstellen</button><button class="secbtn alt" id="secCancel">Zurück</button>`);
     document.getElementById('secCancel').onclick=panel;
     document.getElementById('secGo').onclick=async()=>{const err=document.getElementById('secErr'),a=document.getElementById('secA').value,b=document.getElementById('secB').value;if(!pinOk(a,b,err))return;
-      err.textContent='Erstelle …';try{const sl=crypto.getRandomValues(new Uint8Array(16)),k=await derive(a,sl);const r=await writeBackup(k,sl);err.textContent='';if(r==='ok'){panel();note('Sicherung erstellt')}else err.textContent='Abgebrochen.'}catch(x){err.textContent='Fehler: '+(x&&x.message||x)}}}
+      err.textContent='Erstelle …';try{const sl=crypto.getRandomValues(new Uint8Array(16)),k=await derive(a,sl);const r=await writeBackup(k,sl);err.textContent='';if(r==='ok'){note('Sicherung erstellt');uploadHint()}else err.textContent='Abgebrochen.'}catch(x){err.textContent='Fehler: '+(x&&x.message||x)}}}
   async function restore(file){let o;try{o=JSON.parse(await file.text())}catch(e){o=null}
     if(!o||o.typ!=='Sicherung'||!o.ct){modal(`<h2>Sicherung einlesen</h2><p>Diese Datei ist keine Sicherung der SchulApp.</p><button class="secbtn alt" id="secCancel">Zurück</button>`);document.getElementById('secCancel').onclick=panel;return}
     const when=o.erstellt?new Date(o.erstellt).toLocaleString('de-DE',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):'unbekannt';
@@ -980,13 +983,40 @@ const SEC=(()=>{
 
   /* ---------- Erinnerung ---------- */
   function nag(force){if(!key)return;const m=meta(),lb=m.lastBackup?new Date(m.lastBackup):null,days=lb?Math.floor((Date.now()-lb)/864e5):null;
-    if(!force&&lb&&days<7)return;if(sessionStorage&&!force){try{if(sessionStorage.getItem('secNagOff'))return}catch(e){}}
+    if(!force&&lb&&days<every())return;if(sessionStorage&&!force){try{if(sessionStorage.getItem('secNagOff'))return}catch(e){}}
     addCss();let n=document.getElementById('secNag');if(n)n.remove();n=document.createElement('div');n.id='secNag';n.setAttribute('role','status');
     n.innerHTML=`<span>${lb?`Letzte Sicherung vor ${days} Tagen`:'Noch keine Sicherung'}</span><button type="button" id="secNagGo">Jetzt sichern</button><button type="button" class="x" aria-label="Später" id="secNagX">✕</button>`;
     document.body.appendChild(n);document.getElementById('secNagGo').onclick=()=>{n.remove();backup()};document.getElementById('secNagX').onclick=()=>{try{sessionStorage.setItem('secNagOff','1')}catch(e){}n.remove()}}
 
+  /* ---------- ByCS-Sicherung einrichten ---------- */
+  const DRIVE_DEF='https://7743.drive.bycs.de/files/spaces/personal/';
+  const every=()=>Number(meta().bkEvery)||7;
+  const folder=()=>meta().bkFolder||'';
+  function status(){const b=document.getElementById('syncBtn'),t=document.getElementById('syncTxt');if(!b||!t)return;const m=meta(),lb=m.lastBackup?new Date(m.lastBackup):null,days=lb?Math.floor((Date.now()-lb)/864e5):null;
+    b.classList.remove('ok','due');if(!m.bkSetup){t.textContent='ByCS-Sicherung: noch nicht eingerichtet';return}
+    if(!lb){t.textContent='ByCS-Sicherung: noch keine';b.classList.add('due');return}
+    t.textContent='ByCS-Sicherung: '+(days===0?'heute':days===1?'gestern':'vor '+days+' Tagen');b.classList.add(days>=every()?'due':'ok')}
+  function bycsSetup(){const m=meta();
+    modal(`<h2>ByCS-Sicherung einrichten</h2>
+      <p>Die SchulApp speichert alles nur auf diesem Gerät. Eine verschlüsselte Sicherung in deinem <b>persönlichen ByCS-Drive</b> schützt vor Datenverlust und bringt deine Daten auf ein neues Gerät.</p>
+      <p><b>1.</b> Öffne dein ByCS-Drive und lege einen Ordner „SchulApp-Sicherung“ an.</p>
+      <a class="secbtn alt" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="${esc(DRIVE_DEF)}" target="_blank" rel="noopener">Mein ByCS-Drive öffnen</a>
+      <p style="margin-top:14px"><b>2.</b> Öffne den Ordner, kopiere die Adresse aus der Adresszeile und füge sie hier ein. Leer lassen = „Meine Dateien“.</p>
+      <label for="secFold">Adresse des Sicherungsordners</label><input id="secFold" type="url" inputmode="url" style="font-size:16px;letter-spacing:0" placeholder="${esc(DRIVE_DEF)}…" value="${esc(m.bkFolder||'')}">
+      <label for="secEvery"><b>3.</b> Erinnern, wenn die letzte Sicherung älter ist als</label><select id="secEvery">${[1,3,7,14].map(n=>`<option value="${n}" ${n===every()?'selected':''}>${n===1?'1 Tag':n+' Tage'}</option>`).join('')}</select>
+      <p><b>4.</b> Auf dem iPad: Installiere einmal die App <b>ownCloud</b> und melde dich mit der Adresse <b>https://7743.drive.bycs.de</b> und deiner ByCS-Kennung an. Dann erscheint dein ByCS-Drive in der Dateien-App, und du kannst die Sicherung direkt im Teilen-Menü über „In Dateien sichern“ dort ablegen.</p>
+      <div class="secerr" id="secErr"></div><button class="secbtn" id="secGo">Einrichten und jetzt sichern</button><button class="secbtn alt" id="secSave">Nur speichern</button><button class="secbtn alt" id="secCancel">Abbrechen</button>`);
+    const sv=()=>{const u=document.getElementById('secFold').value.trim();if(u&&!/^https:\/\/[^/]*drive\.bycs\.de\//.test(u)){document.getElementById('secErr').textContent='Bitte eine Adresse aus dem ByCS-Drive einfügen (…drive.bycs.de/…).';return false}
+      setMeta({bkSetup:true,bkFolder:u,bkEvery:Number(document.getElementById('secEvery').value)});status();return true};
+    document.getElementById('secCancel').onclick=panel;document.getElementById('secSave').onclick=()=>{if(sv()){panel();note('ByCS-Sicherung eingerichtet')}};
+    document.getElementById('secGo').onclick=()=>{if(sv())backup()}}
+  function uploadHint(){const u=folder()||DRIVE_DEF;
+    modal(`<h2>Sicherung erstellt</h2><p>Liegt die Datei schon in deinem ByCS-Drive (über „In Dateien sichern“), bist du fertig.</p>
+      <p>Wurde sie heruntergeladen, öffne deinen Sicherungsordner und lade sie dort hoch – per „Neu → Datei hochladen“ oder durch Hineinziehen.</p>
+      <a class="secbtn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="${esc(u)}" target="_blank" rel="noopener">Sicherungsordner im ByCS-Drive öffnen</a>
+      <button class="secbtn alt" id="secClose">Fertig</button>`);document.getElementById('secClose').onclick=closeModal}
   function boot(){if(on()&&hasCrypto())lockScreen();else startApp()}
-  return{store,boot,panel,on,lockNow,askLock};
+  return{store,boot,panel,on,lockNow,askLock,status,bycsSetup};
 })();
 const STORE=SEC.store;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',SEC.boot);else SEC.boot();
@@ -3206,7 +3236,7 @@ XP.listen={t:'Listen exportieren',opts:[],
      pdfTable(doc,y,['Liste','Klasse','Art','Bis','Stand','Fehlt noch'],haIn(S.lists,k).filter(l=>!l.done).map(l=>{const st=liStat(l);return [l.t,l.k,LTYPE[l.type],dDE(l.due),st.have+' von '+st.of,l.type==='text'?'':st.miss.map(pname).join(', ')]}));pdfFoot(doc,'Listen – vertraulich');return doc.output('blob')},name:()=>`Listen_${liClass()}.pdf`}]};
 
 /* Klassen-QR für die Schüler-App */
-const APP_URL_DEF='https://claude.ai/artifact/DAbBcjfztkJN62ERg5AGaB';
+const APP_URL_DEF='https://manukrause-netizen.github.io/schulapp-jpw/schueler.html';
 const QL_DEF=[
  {id:'messenger',n:'Messenger',s:'Chats mit Klasse und Kollegium',i:'i-chat',c:'#3b82c4',u:'https://messenger.bycs.de/#/home'},
  {id:'lernplattform',n:'Lernplattform',s:'ByCS – meine Kurse',i:'i-book',c:'#c9a227',u:'https://lernplattform.bycs.de/my/courses.php'},
@@ -3220,7 +3250,9 @@ function aisPrompt(L,sl){const F=sl?fach(sl.f).n:'';const k=sl?sl.k:'';const jg=
   return `Ich bin Lehrkraft an einer bayerischen Mittelschule (Regelklasse, Jahrgangsstufe ${jg}) und plane eine Unterrichtsstunde (45 Minuten) nach dem LehrplanPLUS Mittelschule Bayern.\n\nFach: ${F}\nThema: ${L.thema||'–'}\nStundenziel: ${L.ziel||'–'}\nLehrplanbezug: ${L.lp||'–'}${L.phasen&&L.phasen.length?'\nBisheriger Verlauf: '+L.phasen.map(p=>`${p.n||'Phase'} (${p.m} Min.)${p.t?': '+p.t:''}`).join('; '):''}\n\nBitte schlage einen Stundenverlauf mit Einstieg, Erarbeitung und Sicherung vor (mit Minutenangaben, Sozialformen und Medien), dazu einen kurzen Tafelanschrieb bzw. Merkeintrag und eine passende Hausaufgabe. Achte auf einfache Sprache und Differenzierung für leistungsschwächere und -stärkere Schülerinnen und Schüler.`}
 function liMail(l){const miss=liStat(l).miss.map(pname);const sub=`${l.t} (${l.k}) – noch offen`;const body=`Hallo,\n\nfür „${l.t}“ (Klasse ${l.k}) fehlt noch:\n${miss.map(n=>'– '+n).join('\n')}\n\nViele Grüße\n${S.teacher}`;return{sub,body,href:'mailto:?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body)}}
 function copyThen(t,msg,fn){const done=()=>{toast(msg);fn&&fn()};(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(done).catch(()=>{prompt('Zum Kopieren:',t);fn&&fn()})}
+if(S.appUrl&&/claude\.ai\/artifact/.test(S.appUrl))S.appUrl=null;
 const appUrl=()=>(S.appUrl||APP_URL_DEF).replace(/#.*$/,'');
+let qrMode='feed';
 function b64url(str){const by=new TextEncoder().encode(str);let s='';by.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 const cut=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s};
 function qrPayload(k){const t=iso(today0()),lim=iso(new Date(today0().getTime()+28*DAY));
@@ -3233,16 +3265,27 @@ function qrPayload(k){const t=iso(today0()),lim=iso(new Date(today0().getTime()+
 function qrSvg(el,text,cell){return loadQR().then(q=>{const c=q(0,'L');c.addData(text,'Byte');c.make();el.innerHTML=c.createSvgTag({cellSize:cell||4,margin:2,scalable:true});const s=el.querySelector('svg');if(s){s.setAttribute('role','img');s.setAttribute('aria-label','QR-Code für die Schüler-App')}}).catch(()=>{el.innerHTML='<span class="muted">Der QR-Code braucht eine Internetverbindung.</span>'})}
 let qrK=null;
 function qrSheet(body,title){const cl=allClasses();if(!qrK||!cl.includes(qrK))qrK=haAppClass();const k=qrK,P=qrPayload(k);
-  document.querySelector('.sheet').classList.add('wide');title.textContent='QR-Code für die Klasse';
-  body.innerHTML=`<div class="field" style="max-width:240px"><label for="qrK">Klasse</label><select class="input" id="qrK">${cl.map(c=>`<option ${c===k?'selected':''}>${c}</option>`).join('')}</select></div>
+  document.querySelector('.sheet').classList.add('wide');title.textContent='QR-Code für die Schüler-App';
+  const mode=`<div class="row2"><div class="field"><label for="qrM">Inhalt</label><select class="input" id="qrM"><option value="feed" ${qrMode==='feed'?'selected':''}>Hausaufgaben und Proben der Klasse</option><option value="app" ${qrMode==='app'?'selected':''}>Nur Schüler-App verbinden</option></select></div>
+    <div class="field"><label for="qrK">Klasse</label><select class="input" id="qrK">${cl.map(c=>`<option ${c===k?'selected':''}>${c}</option>`).join('')}</select></div></div>`;
+  if(qrMode==='app'){const u=appUrl()+'#k='+encodeURIComponent(k);
+    body.innerHTML=mode+`<div class="qrbig" id="qrBig"></div><p style="text-align:center;font-size:20px;font-weight:600;margin:12px 0 2px">Schüler-App öffnen – Klasse ${esc(k)}</p>
+      <p class="muted" style="text-align:center;margin:0">Scannen, öffnen und über „Teilen → Zum Home-Bildschirm“ als App ablegen.</p>
+      <p style="text-align:center;margin:8px 0 0;word-break:break-all" class="small">${esc(appUrl())}</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px"><button class="secondary" data-act="qr-copy"><svg><use href="#i-doc"/></svg>Link kopieren</button></div>
+      <p class="small muted" style="margin-top:16px">Fest eingetragene Adresse der Schüler-App der JPW. Danach bringt der QR-Code „Hausaufgaben und Proben“ die aktuellen Einträge in die App.</p>`;
+    qrSvg(document.getElementById('qrBig'),u,6);qrSheet.url=u;
+    document.getElementById('qrK').addEventListener('change',e=>{qrK=e.target.value;qrSheet(body,title)});document.getElementById('qrM').addEventListener('change',e=>{qrMode=e.target.value;qrSheet(body,title)});
+    document.getElementById('sheetSave').textContent='Fertig';return}
+  body.innerHTML=mode+`
     <div class="qrbig" id="qrBig" aria-live="polite"></div>
     <p style="text-align:center;font-size:20px;font-weight:600;margin:12px 0 2px">Scannen mit der Kamera – Klasse ${esc(k)}</p>
     <p class="muted" style="text-align:center;margin:0">${P.hw} ${P.hw===1?'Hausaufgabe':'Hausaufgaben'} und ${P.pr} ${P.pr===1?'Probe':'Proben'} der nächsten 4 Wochen · Stand ${new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</p>
     ${P.dropped?`<p class="small" style="text-align:center;color:var(--orange)">${P.dropped} spätere ${P.dropped===1?'Eintrag passt':'Einträge passen'} nicht mehr in den Code. Sie kommen mit dem nächsten QR-Code.</p>`:''}
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px"><button class="secondary" data-act="qr-copy"><svg><use href="#i-doc"/></svg>Link kopieren</button><button class="secondary" data-act="qr-wb"><svg><use href="#i-pen"/></svg>Aufs Whiteboard legen</button></div>
-    <p class="small muted" style="margin-top:16px">Der Code enthält nur Fach, Aufgabe, Hinweis und Datum – keine Namen. Die Schüler-App übernimmt die Einträge beim Öffnen des Links. Adresse der Schüler-App: ${esc(appUrl())} (änderbar in den Einstellungen).</p>`;
+    <p class="small muted" style="margin-top:16px">Der Code enthält nur Fach, Aufgabe, Hinweis und Datum – keine Namen. Die Schüler-App übernimmt die Einträge beim Öffnen des Links. Adresse der Schüler-App: ${esc(appUrl())}.</p>`;
   qrSvg(document.getElementById('qrBig'),P.url,6);qrSheet.url=P.url;
-  document.getElementById('qrK').addEventListener('change',e=>{qrK=e.target.value;qrSheet(body,title)});
+  document.getElementById('qrK').addEventListener('change',e=>{qrK=e.target.value;qrSheet(body,title)});document.getElementById('qrM').addEventListener('change',e=>{qrMode=e.target.value;qrSheet(body,title)});
   document.getElementById('sheetSave').textContent='Fertig'}
 WT.appqr={n:'Schüler-App-QR',ic:'i-qr',w:320,h:380,p:()=>({}),
   r:it=>`<div class="wc" style="gap:2cqh"><div data-qr class="qrbox"></div><div style="font-size:7cqh;font-weight:600;text-align:center">Neue Einträge · ${esc(wbClass())}</div><div class="muted" style="font-size:5cqh;text-align:center">Mit der Kamera scannen</div></div>`,
@@ -3500,7 +3543,7 @@ function openSheet(mode,type){
       <div class="field"><label for="sTint2">Schulfarbe Rot (dezent)</label><input class="input" type="color" id="sTint2" value="${S.tint2}" style="height:46px;padding:4px"></div></div>
       <div class="row2"><div class="field"><label for="sSchool">Schulname</label><input class="input" id="sSchool" value="${esc(S.school)}"></div>
       <div class="field"><label for="sTeacher">Anrede</label><input class="input" id="sTeacher" value="${esc(S.teacher)}"></div></div>
-      <div class="field"><label for="sApp">Adresse der Schüler-App (für den QR-Code)</label><input class="input" id="sApp" type="url" value="${esc(appUrl())}" placeholder="https://…"></div>
+      <div class="field"><label for="sApp">Adresse der Schüler-App (für den QR-Code) <span class="muted">– fest eingetragen, nur bei Umzug ändern</span></label><input class="input" id="sApp" type="url" value="${esc(appUrl())}" placeholder="https://…"></div>
       <div class="field"><label>Sicherheit</label><button class="xpbtn" data-act="sec"><span class="xpk">${SEC.on()?'Sperre an':'Sperre aus'}</span><span>App-Sperre und Sicherung in ByCS-Drive</span><svg><use href="#i-right"/></svg></button></div>
       <div class="field"><label>Adressen im Schnellzugriff</label>${QL_DEF.filter(q=>!q.off).map(q=>`<div class="row2" style="align-items:center;margin-bottom:6px"><span class="small" style="flex:0 0 150px">${q.n}</span><input class="input" type="url" inputmode="url" data-ql="${q.id}" value="${esc(qlUrl(q.id))}" placeholder="${esc(q.u)}"></div>`).join('')}<p class="small muted" style="margin:4px 0 0">Leer lassen setzt die Standardadresse. AIS.chat öffnest du in Bayern über das ByCS-Dashboard; hast du eine direkte Adresse, trag sie hier ein.</p></div>
       <div class="field"><label>Speicherort</label><div class="input" style="display:flex;align-items:center;gap:8px"><span class="dot"></span>ByCS-Drive – Anbindung folgt</div></div>

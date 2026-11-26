@@ -247,7 +247,7 @@ function renderWelcome(){document.getElementById('tabbar').classList.add('hide')
   document.getElementById('main').innerHTML=`<div class="welcome"><img src="${LOGO}" alt="Schullogo"><h1>Mein Hausaufgabenheft</h1><p class="lead">Hausaufgaben und Proben deiner Klasse auf einen Blick.</p></div>
   <label class="lab" for="wK">In welche Klasse gehst du?</label><select id="wK"><option value="">Klasse wählen</option>${cl.map(k=>`<option>${k}</option>`).join('')}</select>
   <div class="err" id="wErr"></div><button class="btn primary wide" data-act="start" style="margin-top:6px">Los geht's</button>
-  <div class="notice"><svg><use href="#i-lock"/></svg><div>Die App braucht keinen Namen und kein Konto. Was du abhakst, bleibt nur auf diesem Gerät.</div></div>`}
+  <div class="notice"><svg><use href="#i-lock"/></svg><div>Die App braucht keinen Namen und kein Konto. Was du abhakst, bleibt nur auf diesem Gerät.</div></div>`;if(window.__k){const w=document.getElementById('wK');if(w)w.value=window.__k}}
 
 function renderHeute(){{const fn=ferienNow();if(fn&&fn.a!==fn.b)return renderFerien(fn)}const t=iso(today0()),s1=schoolDay(1),hw=allHw().filter(h=>!h.past);
   const now=hw.filter(h=>h.due<=s1),openNow=now.filter(h=>!h.done).length,pr=allPr(),np=pr[0],fer=nextFerien();
@@ -333,7 +333,8 @@ function applyFeed(f,silent){
 document.getElementById('fileIn').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();
   r.onload=()=>{try{applyFeed(JSON.parse(r.result))}catch(_){toast('Das ist keine Datei aus der SchulApp.')}};r.readAsText(file);e.target.value=''});
 /* Feed per Link: #feed=<base64url> */
-function readHash(){const m=location.hash.match(/feed=([A-Za-z0-9_-]+)/);if(!m)return;let f;
+function readHash(){const mk=location.hash.match(/(?:^#|&)k=([^&]+)/);if(mk){const k=decodeURIComponent(mk[1]);try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}if(!S.klasse){window.__k=k;const w=document.getElementById('wK');if(w)w.value=k}return}
+  const m=location.hash.match(/feed=([A-Za-z0-9_-]+)/);if(!m)return;let f;
   try{let b=m[1].replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';const bytes=Uint8Array.from(atob(b),c=>c.charCodeAt(0));f=JSON.parse(new TextDecoder().decode(bytes));if(f&&f.t==='k1')f=fromCompact(f)}catch(_){toast('Der QR-Code konnte nicht gelesen werden.');return}
   try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}
   if(S.klasse&&f.klasse&&f.klasse!=='alle'&&f.klasse!==S.klasse){setTimeout(()=>toast(`Dieser Code ist für Klasse ${f.klasse}. Deine Klasse änderst du unter „Mehr“.`),300);return}
